@@ -1,23 +1,13 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import AccountList from './routes/account/List'
-import AccountEdit from './routes/account/Edit'
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <AccountList />,
-  },
-  {
-    path: '/account/edit',
-    element: <AccountEdit />,
-  }
-]);
+import React from 'react'
+import { RouterProvider } from "react-router-dom"
+import { SnackbarProvider } from 'notistack';
+import router from './router'
 
 export default function App() {
   return (
-    <RouterProvider router={router} />
+    <React.Fragment>
+      <SnackbarProvider />
+      <RouterProvider router={router} />
+    </React.Fragment>
   );
 }
