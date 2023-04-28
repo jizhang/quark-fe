@@ -7,5 +7,5 @@ export interface Account {
 }
 
 export async function saveAccount(account: Account) {
-  return post('/account/save', account)
+  return post('/api/account/save', account)
 }
