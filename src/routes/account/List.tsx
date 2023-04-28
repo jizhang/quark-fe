@@ -1,38 +1,61 @@
-import Box from '@mui/material/Box'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import ListSubheader from '@mui/material/ListSubheader'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import { useEffect, useState } from 'react'
+import _ from 'lodash'
+import { Box, List, ListItem, ListItemText, ListItemButton, ListSubheader, ListItemSecondaryAction } from '@mui/material'
+import * as service from '@/services/account'
+import { formatAmount } from '@/common/utils'
 import Nav from '@/components/Nav'
 
+const ACCOUNT_TYPE_ASSET = 1
+const ACCOUNT_TYPE_LIABILITY = 2
+
 export default () => {
+  const [count, setCount] = useState(0)
+  const [assets, setAssets] = useState<service.Account[]>([])
+  const [liabilities, setLiabilities] = useState<service.Account[]>([])
+
+  useEffect(() => { // TODO Loading
+    service.getAccountList().then((payload) => {
+      setCount(payload.data.length)
+      setAssets(_.filter(payload.data, ['type', ACCOUNT_TYPE_ASSET]))
+      setLiabilities(_.filter(payload.data, ['type', ACCOUNT_TYPE_LIABILITY]))
+    })
+  }, [])
+
   return (
     <Box>
       <Nav title="Quark" />
       <List>
-        <ListSubheader>Assets</ListSubheader>
-        <ListItemButton>
-          <ListItemText>Cash</ListItemText>
-          <ListItemSecondaryAction>350.00</ListItemSecondaryAction>
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemText>CMB</ListItemText>
-          <ListItemSecondaryAction>224,453.89</ListItemSecondaryAction>
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemText>Alipay</ListItemText>
-          <ListItemSecondaryAction>500,174.16</ListItemSecondaryAction>
-        </ListItemButton>
-        <ListSubheader>Liabilities</ListSubheader>
-        <ListItemButton>
-          <ListItemText>CMB credit card</ListItemText>
-          <ListItemSecondaryAction>11.00</ListItemSecondaryAction>
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemText>Home loan</ListItemText>
-          <ListItemSecondaryAction>744,519.99</ListItemSecondaryAction>
-        </ListItemButton>
+        {count > 0 ? (
+          <>
+            {assets.length > 0 && (
+              <>
+                <ListSubheader>Assets</ListSubheader>
+                {assets.map(item => (
+                  <ListItemButton key={item.id}>
+                    <ListItemText>{item.name}</ListItemText>
+                    <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
+                  </ListItemButton>
+                ))}
+              </>
+            )}
+
+            {liabilities.length > 0 && (
+              <>
+                <ListSubheader>Liabilities</ListSubheader>
+                {liabilities.map(item => (
+                  <ListItemButton key={item.id}>
+                    <ListItemText>{item.name}</ListItemText>
+                    <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
+                  </ListItemButton>
+                ))}
+              </>
+            )}
+          </>
+        ) : (
+          <ListItem>
+            <ListItemText>No data</ListItemText>
+          </ListItem>
+        )}
       </List>
     </Box>
   )
