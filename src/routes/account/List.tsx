@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react'
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  ListSubheader,
+  ListItemSecondaryAction,
+} from '@mui/material'
 import _ from 'lodash'
-import { Box, List, ListItem, ListItemText, ListItemButton, ListSubheader, ListItemSecondaryAction } from '@mui/material'
 import * as service from '@/services/account'
 import { formatAmount } from '@/common/utils'
-import Nav from '@/components/Nav'
+import AccountListNav from '@/components/AccountListNav'
 
 const ACCOUNT_TYPE_ASSET = 1
 const ACCOUNT_TYPE_LIABILITY = 2
@@ -23,7 +31,7 @@ export default () => {
 
   return (
     <Box>
-      <Nav title="Quark" />
+      <AccountListNav />
       <List>
         {count > 0 ? (
           <>

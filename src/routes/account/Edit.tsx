@@ -1,9 +1,24 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
-import { useNavigate } from 'react-router-dom'
-import { Box, Stack, Button, TextField, FormControl, FormControlLabel, FormLabel, FormHelperText, RadioGroup, Radio } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Stack,
+  Button,
+  TextField,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  FormHelperText,
+  RadioGroup,
+  Radio,
+} from '@mui/material'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import * as service from '@/services/account'
-import Nav from '@/components/Nav'
 
 export default () => {
   const navigate = useNavigate()
@@ -74,7 +89,21 @@ export default () => {
 
   return (
     <Box>
-      <Nav title="Add Acount" />
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            component={Link}
+            to="/"
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>Add Account</Typography>
+        </Toolbar>
+      </AppBar>
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
         <TextField
           label="Name"
@@ -99,10 +128,7 @@ export default () => {
           error={!!errors.balance}
           helperText={errors.balance}
         ></TextField>
-        <Stack spacing={2} direction="row">
-          <Button variant="contained" type="submit">Save</Button>
-          <Button onClick={() => { navigate('/') }}>Cancel</Button>
-        </Stack>
+        <Button variant="contained" type="submit">Save</Button>
       </Stack>
     </Box>
   )
