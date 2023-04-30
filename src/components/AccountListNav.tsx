@@ -46,7 +46,7 @@ export default () => {
           onClose={handleClose}
         >
           <MenuItem onClick={() => { navigate('/account/edit') }}>Add Account</MenuItem>
-          <MenuItem onClick={handleClose}>Add Record</MenuItem>
+          <MenuItem onClick={() => { navigate('/record/edit')}}>Add Record</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
