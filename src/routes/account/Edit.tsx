@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import _ from 'lodash'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Box,
@@ -18,6 +17,7 @@ import {
   Radio,
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import _ from 'lodash'
 import * as service from '@/services/account'
 
 export default () => {

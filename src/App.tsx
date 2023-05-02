@@ -1,13 +1,16 @@
-import React from 'react'
 import { RouterProvider } from "react-router-dom"
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { SnackbarProvider } from 'notistack';
 import router from './router'
 
 export default function App() {
   return (
-    <React.Fragment>
+    <>
       <SnackbarProvider />
-      <RouterProvider router={router} />
-    </React.Fragment>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <RouterProvider router={router} />
+      </LocalizationProvider>
+    </>
   );
 }

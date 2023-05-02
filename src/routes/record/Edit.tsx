@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Box,
   AppBar,
@@ -20,13 +21,15 @@ import {
   MenuItem,
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
+import { DateTimePicker } from '@mui/x-date-pickers'
+import dayjs, { Dayjs } from 'dayjs'
 
 export default () => {
   const [form, setForm] = useState({
     recordType: '1',
     expenseType: '',
     incomeType: '',
+    recordTime: dayjs() as Dayjs | null,
     account: '',
     targetAccount: '',
     amount: '',
@@ -39,6 +42,7 @@ export default () => {
     incomeType: '',
     account: '',
     targetAccount: '',
+    recordTime: '',
     amount: '',
     remark: '',
   })
@@ -75,6 +79,13 @@ export default () => {
     setForm({
       ...form,
       targetAccount: event.target.value
+    })
+  }
+
+  function handleChangeRecordTime(value: Dayjs | null) {
+    setForm({
+      ...form,
+      recordTime: value,
     })
   }
 
@@ -196,6 +207,17 @@ export default () => {
             <FormHelperText>{errors.targetAccount}</FormHelperText>
           </FormControl>
         )}
+        <DateTimePicker
+          label="Time"
+          value={form.recordTime}
+          onChange={handleChangeRecordTime}
+          slotProps={{
+            textField: {
+              error: !!errors.recordTime,
+              helperText: errors.recordTime,
+            },
+          }}
+        />
         <TextField
           label="Amount"
           value={form.amount}
