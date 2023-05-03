@@ -13,7 +13,24 @@ function getAccountList() {
   }
 }
 
+function getAccount() {
+  return {
+    account: {
+      id: 1,
+      name: 'Cash',
+      type: 1,
+      initial_balance: 1234.56,
+    }
+  }
+}
+
 function saveAccount() {
+  return {
+    id: 1,
+  }
+}
+
+function deleteAccount() {
   return {
     id: 1,
   }
@@ -25,8 +42,16 @@ export default [
     response: getAccountList,
   },
   {
+    url: '/api/account/get',
+    response: getAccount,
+  },
+  {
     url: '/api/account/save',
     statusCode: 200,
     response: saveAccount,
   },
+  {
+    url: '/api/account/delete',
+    response: deleteAccount,
+  }
 ] as MockMethod[]

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Box,
   List,
@@ -16,16 +17,35 @@ import AccountListNav from '@/components/AccountListNav'
 const ACCOUNT_TYPE_ASSET = 1
 const ACCOUNT_TYPE_LIABILITY = 2
 
+interface AccountGroup {
+  name: string
+  accounts: service.Account[]
+}
+
 export default () => {
-  const [count, setCount] = useState(0)
-  const [assets, setAssets] = useState<service.Account[]>([])
-  const [liabilities, setLiabilities] = useState<service.Account[]>([])
+  const [groups, setGroups] = useState<AccountGroup[]>([])
 
   useEffect(() => { // TODO Loading
     service.getAccountList().then((payload) => {
-      setCount(payload.data.length)
-      setAssets(_.filter(payload.data, ['type', ACCOUNT_TYPE_ASSET]))
-      setLiabilities(_.filter(payload.data, ['type', ACCOUNT_TYPE_LIABILITY]))
+      const groups: AccountGroup[] = []
+
+      const assets = _.filter(payload.data, ['type', ACCOUNT_TYPE_ASSET])
+      if (assets.length > 0) {
+        groups.push({
+          name: 'Assets',
+          accounts: assets,
+        })
+      }
+
+      const liabilities = _.filter(payload.data, ['type', ACCOUNT_TYPE_LIABILITY])
+      if (liabilities.length > 0) {
+        groups.push({
+          name: 'Liabilities',
+          accounts: liabilities,
+        })
+      }
+
+      setGroups(groups)
     })
   }, [])
 
@@ -33,33 +53,18 @@ export default () => {
     <Box>
       <AccountListNav />
       <List>
-        {count > 0 ? (
-          <>
-            {assets.length > 0 && (
-              <>
-                <ListSubheader>Assets</ListSubheader>
-                {assets.map(item => (
-                  <ListItemButton key={item.id}>
-                    <ListItemText>{item.name}</ListItemText>
-                    <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
-                  </ListItemButton>
-                ))}
-              </>
-            )}
-
-            {liabilities.length > 0 && (
-              <>
-                <ListSubheader>Liabilities</ListSubheader>
-                {liabilities.map(item => (
-                  <ListItemButton key={item.id}>
-                    <ListItemText>{item.name}</ListItemText>
-                    <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
-                  </ListItemButton>
-                ))}
-              </>
-            )}
-          </>
-        ) : (
+        {groups.map(group => (
+          <React.Fragment key={group.name}>
+            <ListSubheader>{group.name}</ListSubheader>
+            {group.accounts.map(item => (
+              <ListItemButton key={item.id} component={Link} to={{ pathname: '/account/edit', search: `id=${item.id}` }}>
+                <ListItemText>{item.name}</ListItemText>
+                <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
+              </ListItemButton>
+            ))}
+          </React.Fragment>
+        ))}
+        {groups.length == 0 && (
           <ListItem>
             <ListItemText>No data</ListItemText>
           </ListItem>
