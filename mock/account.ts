@@ -1,6 +1,17 @@
 import _ from 'lodash'
 import { MockMethod } from 'vite-plugin-mock'
 
+function getAccount() {
+  return {
+    account: {
+      id: 1,
+      name: 'Cash',
+      type: 1,
+      initial_balance: 1234.56,
+    }
+  }
+}
+
 function getAccountList() {
   return {
     data: [
@@ -29,4 +40,8 @@ export default [
     statusCode: 200,
     response: saveAccount,
   },
+  {
+    url: '/api/account/get',
+    response: getAccount,
+  }
 ] as MockMethod[]

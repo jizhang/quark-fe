@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   AppBar,
@@ -22,17 +22,34 @@ import * as service from '@/services/account'
 
 export default () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const accountId = searchParams.get('id')
+
+  useEffect(() => {
+    if (accountId) {
+      service.getAccount(_.toNumber(accountId)).then(payload => {
+        const { account } = payload
+        setForm({
+          id: String(account.id),
+          name: account.name,
+          type: String(account.type),
+          initial_balance: String(account.initial_balance),
+        })
+      })
+    }
+  }, [accountId])
 
   const [form, setForm] = useState({
+    id: '',
     name: '',
     type: '1',
-    balance: '0',
+    initial_balance: '0',
   })
 
   const [errors, setErrors] = useState({
     name: '',
     type: '',
-    balance: '',
+    initial_balance: '',
   })
 
   function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
@@ -49,10 +66,10 @@ export default () => {
     })
   }
 
-  function handleChangeBalance(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleChangeInitialBalance(event: React.ChangeEvent<HTMLInputElement>) {
     setForm({
       ...form,
-      balance: event.target.value,
+      initial_balance: event.target.value,
     })
   }
 
@@ -62,7 +79,7 @@ export default () => {
     const errors = {
       name: '',
       type: '',
-      balance: '',
+      initial_balance: '',
     }
 
     if (!form.name) {
@@ -73,10 +90,10 @@ export default () => {
       errors.type = 'Invalid account type'
     }
 
-    if (!form.balance) {
-      errors.balance = 'Initial balance cannot be empty.'
-    } else if (!_.isFinite(_.toNumber(form.balance))) {
-      errors.balance = 'Invalid number format'
+    if (!form.initial_balance) {
+      errors.initial_balance = 'Initial balance cannot be empty.'
+    } else if (!_.isFinite(_.toNumber(form.initial_balance))) {
+      errors.initial_balance = 'Invalid number format'
     }
 
     setErrors(errors)
@@ -113,7 +130,7 @@ export default () => {
           error={!!errors.name}
           helperText={errors.name}
         ></TextField>
-        <FormControl error={!!errors.type}>
+        <FormControl error={!!errors.type} disabled={!!form.id}>
           <FormLabel>Type</FormLabel>
           <RadioGroup row value={form.type} onChange={handleChangeType}>
             <FormControlLabel value="1" control={<Radio />} label="Asset" />
@@ -123,10 +140,11 @@ export default () => {
         </FormControl>
         <TextField
           label="Initial Balance"
-          value={form.balance}
-          onChange={handleChangeBalance}
-          error={!!errors.balance}
-          helperText={errors.balance}
+          value={form.initial_balance}
+          onChange={handleChangeInitialBalance}
+          error={!!errors.initial_balance}
+          helperText={errors.initial_balance}
+          disabled={!!form.id}
         ></TextField>
         <Button variant="contained" type="submit">Save</Button>
       </Stack>

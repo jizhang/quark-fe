@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Box,
   List,
@@ -53,15 +54,15 @@ export default () => {
       <AccountListNav />
       <List>
         {groups.map(group => (
-          <>
+          <React.Fragment key={group.name}>
             <ListSubheader>{group.name}</ListSubheader>
             {group.accounts.map(item => (
-              <ListItemButton key={item.id}>
+              <ListItemButton key={item.id} component={Link} to={{ pathname: '/account/edit', search: `id=${item.id}` }}>
                 <ListItemText>{item.name}</ListItemText>
                 <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
               </ListItemButton>
             ))}
-          </>
+          </React.Fragment>
         ))}
         {groups.length == 0 && (
           <ListItem>

@@ -4,11 +4,16 @@ export interface Account {
   id: number
   name: string
   type: number
+  initial_balance: number,
   balance: number
 }
 
 interface AccountListResponse {
   data: Account[]
+}
+
+export async function getAccount(id: number): Promise<{ account: Account }> {
+  return get('/api/account/get', { id })
 }
 
 export async function getAccountList(): Promise<AccountListResponse> {
@@ -19,7 +24,7 @@ export interface AccountForm {
   id?: string
   name: string
   type: string
-  balance: string
+  initial_balance: string
 }
 
 export async function saveAccount(account: AccountForm) {
