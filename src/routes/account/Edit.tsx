@@ -17,10 +17,12 @@ import {
   Radio,
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useConfirm } from "material-ui-confirm";
 import _ from 'lodash'
 import * as service from '@/services/account'
 
 export default () => {
+  const confirm = useConfirm()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const accountId = searchParams.get('id')
@@ -104,6 +106,14 @@ export default () => {
     })
   }
 
+  function handleDelete() {
+    confirm().then(() => {
+      service.deleteAccount(_.toNumber(form.id)).then(() => {
+        navigate('/')
+      })
+    }, _.noop)
+  }
+
   return (
     <Box>
       <AppBar position="static">
@@ -118,7 +128,7 @@ export default () => {
           >
             <ArrowBackIosIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>Add Account</Typography>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>{form.id ? 'Edit' : 'Add'} Account</Typography>
         </Toolbar>
       </AppBar>
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
@@ -147,6 +157,9 @@ export default () => {
           disabled={!!form.id}
         ></TextField>
         <Button variant="contained" type="submit">Save</Button>
+        {form.id && (
+          <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+        )}
       </Stack>
     </Box>
   )
