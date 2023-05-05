@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
+import { navigateHolder } from '@/common/utils'
 import Login from './routes/Login'
 import AccountList from './routes/account/List'
 import AccountEdit from './routes/account/Edit'
 import RecordList from './routes/record/List'
 import RecordEdit from './routes/record/Edit'
 
-export default createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
@@ -27,3 +28,7 @@ export default createBrowserRouter([
     element: <RecordEdit />,
   },
 ])
+
+navigateHolder.navigate = router.navigate
+
+export default router
