@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -8,8 +8,10 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import AddIcon from '@mui/icons-material/Add'
+import {
+  Add as AddIcon,
+} from '@mui/icons-material'
+import SideMenu from '@/components/SideMenu'
 
 export default () => {
   const navigate = useNavigate()
@@ -28,15 +30,9 @@ export default () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
+        <SideMenu />
         <Typography variant="h6" sx={{ flexGrow: 1 }}>Account List</Typography>
+
         <IconButton size="large" edge="end" color="inherit" onClick={handleClick}>
           <AddIcon />
         </IconButton>

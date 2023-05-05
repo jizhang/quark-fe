@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Login from './routes/Login'
 import AccountList from './routes/account/List'
 import AccountEdit from './routes/account/Edit'
+import RecordList from './routes/record/List'
 import RecordEdit from './routes/record/Edit'
 
 export default createBrowserRouter([
@@ -16,6 +17,10 @@ export default createBrowserRouter([
   {
     path: '/account/edit',
     element: <AccountEdit />,
+  },
+  {
+    path: '/record/list',
+    element: <RecordList />,
   },
   {
     path: '/record/edit',
