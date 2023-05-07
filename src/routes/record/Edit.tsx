@@ -24,10 +24,7 @@ import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
-
-const RECORD_TYPE_EXPENSE = 1
-const RECORD_TYPE_INCOME = 2
-const RECORD_TYPE_TRANSFER = 3
+import * as consts from '@/common/consts'
 
 function getEmptyErrors() {
   return {
@@ -121,21 +118,21 @@ export default () => {
       errors.recordType = 'Record type cannot be empty.'
     }
 
-    if (form.recordType === String(RECORD_TYPE_EXPENSE)) {
+    if (form.recordType === String(consts.RECORD_TYPE_EXPENSE)) {
       if (!form.expenseType) {
         errors.expenseType = 'Expense type cannot be empty.'
       }
       if (!form.account) {
         errors.account = 'Account cannot be empty.'
       }
-    } else if (form.recordType === String(RECORD_TYPE_INCOME)) {
+    } else if (form.recordType === String(consts.RECORD_TYPE_INCOME)) {
       if (!form.incomeType) {
         errors.incomeType = 'Income type annot be empty.'
       }
       if (!form.account) {
         errors.account = 'Account cannot be empty.'
       }
-    } else if (form.recordType === String(RECORD_TYPE_TRANSFER)) {
+    } else if (form.recordType === String(consts.RECORD_TYPE_TRANSFER)) {
       if (!form.account) {
         errors.account = 'Source account cannot be empty.'
       }
