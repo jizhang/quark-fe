@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import qs from 'qs'
 import { enqueueSnackbar } from 'notistack';
-import router from '@/router'
+import { navigateHolder } from '@/common/utils'
 
 class RequestError {
   constructor(public code: number, public payload: any) {}
@@ -39,7 +39,7 @@ export async function request(url: string, config?: RequestInit) {
 
   // 401 Unauthorized
   if (response.status === 401) {
-    router.navigate('/login')
+    navigateHolder.navigate('/login')
     throw new RequestError(401, null)
   }
 

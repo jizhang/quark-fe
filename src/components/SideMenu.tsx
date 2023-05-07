@@ -11,9 +11,9 @@ import {
 } from '@mui/material'
 import {
   Menu as MenuIcon,
-  Add as AddIcon,
   Logout as LogoutIcon,
   Notes as NotesIcon,
+  Settings as SettingsIcon,
   AccountBalanceWallet,
 } from '@mui/icons-material'
 
@@ -54,6 +54,10 @@ export default () => {
           <ListItemButton onClick={gotoRecords}>
             <ListItemIcon><NotesIcon /></ListItemIcon>
             <ListItemText>Records</ListItemText>
+          </ListItemButton>
+          <ListItemButton>
+            <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemText>Settings</ListItemText>
           </ListItemButton>
         </List>
         <Divider />

@@ -22,21 +22,12 @@ import {
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
+import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
+import * as consts from '@/common/consts'
 
-export default () => {
-  const [form, setForm] = useState({
-    recordType: '1',
-    expenseType: '',
-    incomeType: '',
-    recordTime: dayjs() as Dayjs | null,
-    account: '',
-    targetAccount: '',
-    amount: '',
-    remark: '',
-  })
-
-  const [errors, setErrors] = useState({
+function getEmptyErrors() {
+  return {
     recordType: '',
     expenseType: '',
     incomeType: '',
@@ -45,7 +36,22 @@ export default () => {
     recordTime: '',
     amount: '',
     remark: '',
+  }
+}
+
+export default () => {
+  const [form, setForm] = useState({
+    recordType: '1',
+    expenseType: '',
+    incomeType: '',
+    account: '',
+    targetAccount: '',
+    recordTime: dayjs() as Dayjs | null,
+    amount: '',
+    remark: '',
   })
+
+  const [errors, setErrors] = useState(getEmptyErrors())
 
   function handleChangeRecordType(event: React.ChangeEvent<HTMLInputElement>) {
     setForm({
@@ -105,6 +111,54 @@ export default () => {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    const errors = getEmptyErrors();
+
+    if (!form.recordType) {
+      errors.recordType = 'Record type cannot be empty.'
+    }
+
+    if (form.recordType === String(consts.RECORD_TYPE_EXPENSE)) {
+      if (!form.expenseType) {
+        errors.expenseType = 'Expense type cannot be empty.'
+      }
+      if (!form.account) {
+        errors.account = 'Account cannot be empty.'
+      }
+    } else if (form.recordType === String(consts.RECORD_TYPE_INCOME)) {
+      if (!form.incomeType) {
+        errors.incomeType = 'Income type annot be empty.'
+      }
+      if (!form.account) {
+        errors.account = 'Account cannot be empty.'
+      }
+    } else if (form.recordType === String(consts.RECORD_TYPE_TRANSFER)) {
+      if (!form.account) {
+        errors.account = 'Source account cannot be empty.'
+      }
+      if (!form.targetAccount) {
+        errors.targetAccount = 'Target account cannot be empty.'
+      }
+    } else {
+      errors.recordType = 'Invalid record type'
+    }
+
+    if (!form.recordTime) {
+      errors.recordTime = 'Record time cannot be empty.'
+    }
+
+    if (!form.amount) {
+      errors.amount = 'Amount cannot be empty.'
+    } else if (!_.isFinite(_.toNumber(form.amount))) {
+      errors.amount = 'Invalid number format'
+    }
+
+    setErrors(errors)
+    if (_(errors).values().some()) {
+      return
+    }
+
+    alert('submit')
   }
 
   const accounts = [
