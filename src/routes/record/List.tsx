@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -64,7 +65,7 @@ export default () => {
             disablePadding
             secondaryAction={formatAmount(item.amount)}
           >
-            <ListItemButton>
+            <ListItemButton component={Link} to={{ pathname: '/record/edit', search: `id=${item.id}` }}>
               <ListItemAvatar><Avatar>{getIcon(item.record_type)}</Avatar></ListItemAvatar>
               <ListItemText primary={getPrimaryText(item)} secondary={getSecondaryText(item)} />
             </ListItemButton>

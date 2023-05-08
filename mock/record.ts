@@ -40,9 +40,35 @@ function getRecordList() {
   }
 }
 
+function getRecord() {
+  return {
+    id: 1,
+    record_type: 1,
+    expense_type: 1,
+    account: 3,
+    record_time: '2023-05-05 08:17:00',
+    amount: 10.9,
+    remark: 'Remark 1',
+  }
+}
+
+function saveRecord() {
+  return {
+    id: 1,
+  }
+}
+
 export default [
   {
     url: '/api/record/list',
     response: getRecordList,
+  },
+  {
+    url: '/api/record/get',
+    response: getRecord,
+  },
+  {
+    url: '/api/record/save',
+    response: saveRecord,
   },
 ] as MockMethod[]

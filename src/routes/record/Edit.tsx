@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   AppBar,
@@ -25,6 +25,7 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import * as consts from '@/common/consts'
+import * as service from '@/services/record'
 
 function getEmptyErrors() {
   return {
@@ -40,7 +41,30 @@ function getEmptyErrors() {
 }
 
 export default () => {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const recordId = searchParams.get('id')
+
+  useEffect(() => {
+    if (recordId) {
+      service.getRecord(_.toInteger(recordId)).then(payload => {
+        setForm({
+          id: String(payload.id),
+          recordType: String(payload.record_type),
+          expenseType: payload.expense_type ? String(payload.expense_type) : '',
+          incomeType: payload.income_type ? String(payload.income_type) : '',
+          account: String(payload.account),
+          targetAccount: payload.target_account ? String(payload.target_account) : '',
+          recordTime: dayjs(payload.record_time),
+          amount: String(payload.amount),
+          remark: String(payload.remark),
+        })
+      })
+    }
+  }, [recordId])
+
   const [form, setForm] = useState({
+    id: '',
     recordType: '1',
     expenseType: '',
     incomeType: '',
@@ -112,7 +136,7 @@ export default () => {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const errors = getEmptyErrors();
+    const errors = getEmptyErrors()
 
     if (!form.recordType) {
       errors.recordType = 'Record type cannot be empty.'
@@ -158,12 +182,27 @@ export default () => {
       return
     }
 
-    alert('submit')
+    const recordForm = {
+      id: form.id ? _.toInteger(form.id) : undefined,
+      record_type: _.toInteger(form.recordType),
+      expense_type: form.expenseType ? _.toInteger(form.expenseType) : undefined,
+      income_type: form.incomeType ? _.toInteger(form.incomeType) : undefined,
+      account: _.toInteger(form.account),
+      target_account: form.targetAccount ? _.toInteger(form.targetAccount) : undefined,
+      record_time: (form.recordTime || dayjs()).format('YYYY-MM-DD HH:mm:ss'),
+      amount: _.toNumber(form.amount),
+      remark: form.remark,
+    }
+
+    service.saveRecord(recordForm).then(() => {
+      navigate('/record/list')
+    })
   }
 
   const accounts = [
     { id: 1, name: 'Cash' },
     { id: 2, name: 'CMB' },
+    { id: 3, name: 'Alipay' },
   ]
 
   const expenseTypes = [
@@ -186,7 +225,7 @@ export default () => {
             color="inherit"
             sx={{ mr: 2 }}
             component={Link}
-            to="/"
+            to="/record/list"
           >
             <ArrowBackIos />
           </IconButton>
@@ -197,13 +236,13 @@ export default () => {
         <FormControl error={!!errors.recordType}>
           <FormLabel>Type</FormLabel>
           <RadioGroup row value={form.recordType} onChange={handleChangeRecordType}>
-            <FormControlLabel value="1" control={<Radio />} label="Expense" />
-            <FormControlLabel value="2" control={<Radio />} label="Income" />
-            <FormControlLabel value="3" control={<Radio />} label="Transfer" />
+            <FormControlLabel value={consts.RECORD_TYPE_EXPENSE} control={<Radio />} label="Expense" />
+            <FormControlLabel value={consts.RECORD_TYPE_INCOME} control={<Radio />} label="Income" />
+            <FormControlLabel value={consts.RECORD_TYPE_TRANSFER} control={<Radio />} label="Transfer" />
           </RadioGroup>
           <FormHelperText>{errors.recordType}</FormHelperText>
         </FormControl>
-        {form.recordType === '1' && (
+        {form.recordType === String(consts.RECORD_TYPE_EXPENSE) && (
           <FormControl error={!!errors.expenseType}>
             <InputLabel>Expense Type</InputLabel>
             <Select
@@ -218,7 +257,7 @@ export default () => {
             <FormHelperText>{errors.expenseType}</FormHelperText>
           </FormControl>
         )}
-        {form.recordType === '2' && (
+        {form.recordType === String(consts.RECORD_TYPE_INCOME) && (
           <FormControl error={!!errors.incomeType}>
             <InputLabel>Income Type</InputLabel>
             <Select
@@ -234,10 +273,10 @@ export default () => {
           </FormControl>
         )}
         <FormControl error={!!errors.account}>
-          <InputLabel>{form.recordType === '3' ? 'Source Account' : 'Account'}</InputLabel>
+          <InputLabel>{form.recordType === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}</InputLabel>
           <Select
             value={form.account}
-            label={form.recordType === '3' ? 'Source Account' : 'Account'}
+            label={form.recordType === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}
             onChange={handleChangeAccount}
           >
             {accounts.map(item => (
@@ -246,7 +285,7 @@ export default () => {
           </Select>
           <FormHelperText>{errors.account}</FormHelperText>
         </FormControl>
-        {form.recordType === '3' && (
+        {form.recordType === String(consts.RECORD_TYPE_TRANSFER) && (
           <FormControl error={!!errors.targetAccount}>
             <InputLabel>Target Account</InputLabel>
             <Select
