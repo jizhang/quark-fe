@@ -7,9 +7,9 @@ export interface RecordItem {
   expense_type_name: string
   income_type: number
   income_type_name: string
-  account: number
+  account_id: number
   account_name: string
-  target_account: number
+  target_account_id: number
   target_account_name: string
   record_time: string
   amount: number
@@ -29,8 +29,8 @@ interface RecordForm {
   record_type: number
   expense_type?: number
   income_type?: number
-  account: number
-  target_account?: number
+  account_id: number
+  target_account_id?: number
   record_time: string
   amount: number
   remark: string
