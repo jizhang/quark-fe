@@ -27,8 +27,7 @@ export async function getRecordList(): Promise<RecordListResponse> {
 interface RecordForm {
   id?: number
   record_type: number
-  expense_type?: number
-  income_type?: number
+  category_id?: number
   account_id: number
   target_account_id?: number
   record_time: string

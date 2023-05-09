@@ -44,7 +44,7 @@ function getRecord() {
   return {
     id: 1,
     record_type: 1,
-    expense_type: 1,
+    category_id: 1,
     account_id: 3,
     record_time: '2023-05-05 08:17:00',
     amount: 10.9,
