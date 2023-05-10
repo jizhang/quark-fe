@@ -3,14 +3,9 @@ import { get, post } from '@/common/request'
 export interface RecordItem {
   id: number
   record_type: number
-  expense_type: number
-  expense_type_name: string
-  income_type: number
-  income_type_name: string
-  account: number
+  category_name?: string
   account_name: string
-  target_account: number
-  target_account_name: string
+  target_account_name?: string
   record_time: string
   amount: number
   remark: string
@@ -27,10 +22,9 @@ export async function getRecordList(): Promise<RecordListResponse> {
 interface RecordForm {
   id?: number
   record_type: number
-  expense_type?: number
-  income_type?: number
-  account: number
-  target_account?: number
+  category_id?: number
+  account_id: number
+  target_account_id?: number
   record_time: string
   amount: number
   remark: string
@@ -42,4 +36,8 @@ export async function getRecord(id: number): Promise<RecordForm> {
 
 export async function saveRecord(form: RecordForm): Promise<{ id: number }> {
   return post('/api/record/save', form)
+}
+
+export async function deleteRecord(id: number): Promise<{ id: number }> {
+  return post('/api/record/delete', { id })
 }

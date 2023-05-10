@@ -47,7 +47,7 @@ export default () => {
         </Typography>
       )
     }
-    return item.account_name
+    return item.category_name
   }
 
   function getSecondaryText(item: service.RecordItem) {

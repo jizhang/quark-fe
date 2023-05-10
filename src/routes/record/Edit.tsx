@@ -22,6 +22,7 @@ import {
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
+import { useConfirm } from "material-ui-confirm";
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import * as consts from '@/common/consts'
@@ -30,10 +31,9 @@ import * as service from '@/services/record'
 function getEmptyErrors() {
   return {
     recordType: '',
-    expenseType: '',
-    incomeType: '',
-    account: '',
-    targetAccount: '',
+    categoryId: '',
+    accountId: '',
+    targetAccountId: '',
     recordTime: '',
     amount: '',
     remark: '',
@@ -42,6 +42,7 @@ function getEmptyErrors() {
 
 export default () => {
   const navigate = useNavigate()
+  const confirm = useConfirm()
   const [searchParams] = useSearchParams()
   const recordId = searchParams.get('id')
 
@@ -51,10 +52,9 @@ export default () => {
         setForm({
           id: String(payload.id),
           recordType: String(payload.record_type),
-          expenseType: payload.expense_type ? String(payload.expense_type) : '',
-          incomeType: payload.income_type ? String(payload.income_type) : '',
-          account: String(payload.account),
-          targetAccount: payload.target_account ? String(payload.target_account) : '',
+          categoryId: payload.category_id ? String(payload.category_id) : '',
+          accountId: String(payload.account_id),
+          targetAccountId: payload.target_account_id ? String(payload.target_account_id) : '',
           recordTime: dayjs(payload.record_time),
           amount: String(payload.amount),
           remark: String(payload.remark),
@@ -66,10 +66,9 @@ export default () => {
   const [form, setForm] = useState({
     id: '',
     recordType: '1',
-    expenseType: '',
-    incomeType: '',
-    account: '',
-    targetAccount: '',
+    categoryId: '',
+    accountId: '',
+    targetAccountId: '',
     recordTime: dayjs() as Dayjs | null,
     amount: '',
     remark: '',
@@ -81,34 +80,28 @@ export default () => {
     setForm({
       ...form,
       recordType: event.target.value,
+      categoryId: '',
     })
   }
 
-  function handleChangeExpenseType(event: SelectChangeEvent) {
+  function handleChangeCategoryId(event: SelectChangeEvent) {
     setForm({
       ...form,
-      expenseType: event.target.value
+      categoryId: event.target.value,
     })
   }
 
-  function handleChangeIncomeType(event: SelectChangeEvent) {
+  function handleChangeAccountId(event: SelectChangeEvent) {
     setForm({
       ...form,
-      incomeType: event.target.value
+      accountId: event.target.value
     })
   }
 
-  function handleChangeAccount(event: SelectChangeEvent) {
+  function handleChangeTargetAccountId(event: SelectChangeEvent) {
     setForm({
       ...form,
-      account: event.target.value
-    })
-  }
-
-  function handleChangeTargetAccount(event: SelectChangeEvent) {
-    setForm({
-      ...form,
-      targetAccount: event.target.value
+      targetAccountId: event.target.value
     })
   }
 
@@ -142,26 +135,19 @@ export default () => {
       errors.recordType = 'Record type cannot be empty.'
     }
 
-    if (form.recordType === String(consts.RECORD_TYPE_EXPENSE)) {
-      if (!form.expenseType) {
-        errors.expenseType = 'Expense type cannot be empty.'
+    if (form.recordType === String(consts.RECORD_TYPE_EXPENSE) || form.recordType === String(consts.RECORD_TYPE_INCOME)) {
+      if (!form.categoryId) {
+        errors.categoryId = 'Category cannot be empty.'
       }
-      if (!form.account) {
-        errors.account = 'Account cannot be empty.'
-      }
-    } else if (form.recordType === String(consts.RECORD_TYPE_INCOME)) {
-      if (!form.incomeType) {
-        errors.incomeType = 'Income type annot be empty.'
-      }
-      if (!form.account) {
-        errors.account = 'Account cannot be empty.'
+      if (!form.accountId) {
+        errors.accountId = 'Account cannot be empty.'
       }
     } else if (form.recordType === String(consts.RECORD_TYPE_TRANSFER)) {
-      if (!form.account) {
-        errors.account = 'Source account cannot be empty.'
+      if (!form.accountId) {
+        errors.accountId = 'Source account cannot be empty.'
       }
-      if (!form.targetAccount) {
-        errors.targetAccount = 'Target account cannot be empty.'
+      if (!form.targetAccountId) {
+        errors.targetAccountId = 'Target account cannot be empty.'
       }
     } else {
       errors.recordType = 'Invalid record type'
@@ -185,10 +171,9 @@ export default () => {
     const recordForm = {
       id: form.id ? _.toInteger(form.id) : undefined,
       record_type: _.toInteger(form.recordType),
-      expense_type: form.expenseType ? _.toInteger(form.expenseType) : undefined,
-      income_type: form.incomeType ? _.toInteger(form.incomeType) : undefined,
-      account: _.toInteger(form.account),
-      target_account: form.targetAccount ? _.toInteger(form.targetAccount) : undefined,
+      category_id: form.categoryId ? _.toInteger(form.categoryId) : undefined,
+      account_id: _.toInteger(form.accountId),
+      target_account_id: form.targetAccountId ? _.toInteger(form.targetAccountId) : undefined,
       record_time: (form.recordTime || dayjs()).format('YYYY-MM-DD HH:mm:ss'),
       amount: _.toNumber(form.amount),
       remark: form.remark,
@@ -199,20 +184,26 @@ export default () => {
     })
   }
 
+  function handleDelete() {
+    confirm().then(() => {
+      service.deleteRecord(_.toInteger(form.id)).then(() => {
+        navigate('/record/list')
+      })
+    }, _.noop)
+  }
+
   const accounts = [
     { id: 1, name: 'Cash' },
     { id: 2, name: 'CMB' },
     { id: 3, name: 'Alipay' },
   ]
 
-  const expenseTypes = [
-    { id: 1, name: 'Meal' },
-    { id: 2, name: 'Snack' },
-  ]
-
-  const incomeTypes = [
-    { id: 1, name: 'Salary' },
-    { id: 2, name: 'Investment' },
+  const categories = [
+    { id: 1, name: 'Meal', type: consts.RECORD_TYPE_EXPENSE },
+    { id: 2, name: 'Snack', type: consts.RECORD_TYPE_EXPENSE },
+    { id: 3, name: 'Mobile', type: consts.RECORD_TYPE_EXPENSE },
+    { id: 4, name: 'Salary', type: consts.RECORD_TYPE_INCOME },
+    { id: 5, name: 'Investment', type: consts.RECORD_TYPE_INCOME },
   ]
 
   return (
@@ -242,62 +233,47 @@ export default () => {
           </RadioGroup>
           <FormHelperText>{errors.recordType}</FormHelperText>
         </FormControl>
-        {form.recordType === String(consts.RECORD_TYPE_EXPENSE) && (
-          <FormControl error={!!errors.expenseType}>
-            <InputLabel>Expense Type</InputLabel>
+        {(form.recordType === String(consts.RECORD_TYPE_EXPENSE) || form.recordType === String(consts.RECORD_TYPE_INCOME)) && (
+          <FormControl error={!!errors.categoryId}>
+            <InputLabel>Category</InputLabel>
             <Select
-              value={form.expenseType}
-              label="Expense Type"
-              onChange={handleChangeExpenseType}
+              value={form.categoryId}
+              label="Category"
+              onChange={handleChangeCategoryId}
             >
-              {expenseTypes.map(item => (
+              {_.filter(categories, ['type', _.toInteger(form.recordType)]).map(item => (
                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
               ))}
             </Select>
-            <FormHelperText>{errors.expenseType}</FormHelperText>
+            <FormHelperText>{errors.categoryId}</FormHelperText>
           </FormControl>
         )}
-        {form.recordType === String(consts.RECORD_TYPE_INCOME) && (
-          <FormControl error={!!errors.incomeType}>
-            <InputLabel>Income Type</InputLabel>
-            <Select
-              value={form.incomeType}
-              label="Income Type"
-              onChange={handleChangeIncomeType}
-            >
-              {incomeTypes.map(item => (
-                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>{errors.incomeType}</FormHelperText>
-          </FormControl>
-        )}
-        <FormControl error={!!errors.account}>
+        <FormControl error={!!errors.accountId}>
           <InputLabel>{form.recordType === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}</InputLabel>
           <Select
-            value={form.account}
+            value={form.accountId}
             label={form.recordType === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}
-            onChange={handleChangeAccount}
+            onChange={handleChangeAccountId}
           >
             {accounts.map(item => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>
-          <FormHelperText>{errors.account}</FormHelperText>
+          <FormHelperText>{errors.accountId}</FormHelperText>
         </FormControl>
         {form.recordType === String(consts.RECORD_TYPE_TRANSFER) && (
-          <FormControl error={!!errors.targetAccount}>
+          <FormControl error={!!errors.targetAccountId}>
             <InputLabel>Target Account</InputLabel>
             <Select
-              value={form.targetAccount}
+              value={form.targetAccountId}
               label="Target Account"
-              onChange={handleChangeTargetAccount}
+              onChange={handleChangeTargetAccountId}
             >
               {accounts.map(item => (
                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
               ))}
             </Select>
-            <FormHelperText>{errors.targetAccount}</FormHelperText>
+            <FormHelperText>{errors.targetAccountId}</FormHelperText>
           </FormControl>
         )}
         <DateTimePicker
@@ -326,6 +302,9 @@ export default () => {
           helperText={errors.remark}
         ></TextField>
         <Button variant="contained" type="submit">Save</Button>
+        {form.id && (
+          <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+        )}
       </Stack>
     </Box>
   )
