@@ -22,6 +22,7 @@ import {
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
+import { useConfirm } from "material-ui-confirm";
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import * as consts from '@/common/consts'
@@ -41,6 +42,7 @@ function getEmptyErrors() {
 
 export default () => {
   const navigate = useNavigate()
+  const confirm = useConfirm()
   const [searchParams] = useSearchParams()
   const recordId = searchParams.get('id')
 
@@ -182,6 +184,14 @@ export default () => {
     })
   }
 
+  function handleDelete() {
+    confirm().then(() => {
+      service.deleteRecord(_.toInteger(form.id)).then(() => {
+        navigate('/record/list')
+      })
+    }, _.noop)
+  }
+
   const accounts = [
     { id: 1, name: 'Cash' },
     { id: 2, name: 'CMB' },
@@ -292,6 +302,9 @@ export default () => {
           helperText={errors.remark}
         ></TextField>
         <Button variant="contained" type="submit">Save</Button>
+        {form.id && (
+          <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+        )}
       </Stack>
     </Box>
   )

@@ -52,6 +52,12 @@ function saveRecord() {
   }
 }
 
+function deleteRecord() {
+  return {
+    id: 1,
+  }
+}
+
 export default [
   {
     url: '/api/record/list',
@@ -64,5 +70,9 @@ export default [
   {
     url: '/api/record/save',
     response: saveRecord,
+  },
+  {
+    url: '/api/record/delete',
+    response: deleteRecord,
   },
 ] as MockMethod[]

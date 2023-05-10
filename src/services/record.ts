@@ -37,3 +37,7 @@ export async function getRecord(id: number): Promise<RecordForm> {
 export async function saveRecord(form: RecordForm): Promise<{ id: number }> {
   return post('/api/record/save', form)
 }
+
+export async function deleteRecord(id: number): Promise<{ id: number }> {
+  return post('/api/record/delete', { id })
+}
