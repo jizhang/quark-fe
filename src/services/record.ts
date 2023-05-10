@@ -3,14 +3,9 @@ import { get, post } from '@/common/request'
 export interface RecordItem {
   id: number
   record_type: number
-  expense_type: number
-  expense_type_name: string
-  income_type: number
-  income_type_name: string
-  account_id: number
+  category_name?: string
   account_name: string
-  target_account_id: number
-  target_account_name: string
+  target_account_name?: string
   record_time: string
   amount: number
   remark: string
