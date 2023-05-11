@@ -26,6 +26,8 @@ import { useConfirm } from "material-ui-confirm";
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import * as consts from '@/common/consts'
+import * as accountService from '@/services/account'
+import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
 
 function getEmptyErrors() {
@@ -192,19 +194,21 @@ export default () => {
     }, _.noop)
   }
 
-  const accounts = [
-    { id: 1, name: 'Cash' },
-    { id: 2, name: 'CMB' },
-    { id: 3, name: 'Alipay' },
-  ]
+  const [accounts, setAccounts] = useState<accountService.Account[]>([])
 
-  const categories = [
-    { id: 1, name: 'Meal', type: consts.RECORD_TYPE_EXPENSE },
-    { id: 2, name: 'Snack', type: consts.RECORD_TYPE_EXPENSE },
-    { id: 3, name: 'Mobile', type: consts.RECORD_TYPE_EXPENSE },
-    { id: 4, name: 'Salary', type: consts.RECORD_TYPE_INCOME },
-    { id: 5, name: 'Investment', type: consts.RECORD_TYPE_INCOME },
-  ]
+  useEffect(() => {
+    accountService.getAccountList().then(payload => {
+      setAccounts(payload.data)
+    })
+  }, [])
+
+  const [categories, setCategories] = useState<categoryService.Category[]>([])
+
+  useEffect(() => {
+    categoryService.getCategoryList().then(payload => {
+      setCategories(payload.data)
+    })
+  }, [])
 
   return (
     <Box>
