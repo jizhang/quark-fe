@@ -7,7 +7,6 @@ import {
   ListItemText,
   ListItemButton,
   ListSubheader,
-  ListItemSecondaryAction,
 } from '@mui/material'
 import _ from 'lodash'
 import * as service from '@/services/account'
@@ -57,10 +56,22 @@ export default () => {
           <React.Fragment key={group.name}>
             <ListSubheader>{group.name}</ListSubheader>
             {group.accounts.map(item => (
-              <ListItemButton key={item.id} component={Link} to={{ pathname: '/account/edit', search: `id=${item.id}` }}>
-                <ListItemText>{item.name}</ListItemText>
-                <ListItemSecondaryAction>{formatAmount(item.balance)}</ListItemSecondaryAction>
-              </ListItemButton>
+              <ListItem key={item.id} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={{
+                    pathname: '/account/edit',
+                    search: `id=${item.id}`,
+                  }}
+                >
+                  <ListItemText>
+                    <Box display="flex">
+                      <Box flexGrow={1}>{item.name}</Box>
+                      <Box>{formatAmount(item.balance)}</Box>
+                    </Box>
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
             ))}
           </React.Fragment>
         ))}

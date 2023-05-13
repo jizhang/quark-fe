@@ -10,7 +10,7 @@ function getRecordList() {
         account_name: 'Alipay',
         record_time: '2023-05-05 08:17:00',
         amount: 10.9,
-        remark: 'Remark 1',
+        remark: 'chess cracker scald free ink bang verse redundant young glistening',
       },
       {
         id: 2,

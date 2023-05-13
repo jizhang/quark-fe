@@ -8,7 +8,6 @@ import {
   ListItemButton,
   ListItemAvatar,
   ListItemText,
-  Typography,
 } from '@mui/material'
 import {
   Upload as UploadIcon,
@@ -38,16 +37,25 @@ export default () => {
   }
 
   function getPrimaryText(item: service.RecordItem) {
+    let text: React.ReactNode
     if (item.record_type === consts.RECORD_TYPE_TRANSFER) {
-      return (
-        <Typography display="flex">
+      text = (
+        <Box display="flex">
           {item.account_name}
           <ArrowRight />
           {item.target_account_name}
-        </Typography>
+        </Box>
       )
+    } else {
+      text = item.category_name
     }
-    return item.category_name
+
+    return (
+      <Box display="flex">
+        <Box flexGrow={1}>{text}</Box>
+        <Box>{formatAmount(item.amount)}</Box>
+      </Box>
+    )
   }
 
   function getSecondaryText(item: service.RecordItem) {
@@ -63,9 +71,12 @@ export default () => {
           <ListItem
             key={item.id}
             disablePadding
-            secondaryAction={formatAmount(item.amount)}
           >
-            <ListItemButton component={Link} to={{ pathname: '/record/edit', search: `id=${item.id}` }}>
+            <ListItemButton
+              component={Link}
+              to={{ pathname: '/record/edit', search: `id=${item.id}` }}
+              alignItems="flex-start"
+            >
               <ListItemAvatar><Avatar>{getIcon(item.record_type)}</Avatar></ListItemAvatar>
               <ListItemText primary={getPrimaryText(item)} secondary={getSecondaryText(item)} />
             </ListItemButton>

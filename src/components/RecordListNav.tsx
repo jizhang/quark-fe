@@ -12,14 +12,17 @@ import SideMenu from '@/components/SideMenu'
 
 export default () => {
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <SideMenu />
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>Record List</Typography>
-        <IconButton size="large" edge="end" color="inherit" component={Link} to="/record/edit">
-          <AddIcon />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <SideMenu />
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>Record List</Typography>
+          <IconButton size="large" edge="end" color="inherit" component={Link} to="/record/edit">
+            <AddIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   )
 }

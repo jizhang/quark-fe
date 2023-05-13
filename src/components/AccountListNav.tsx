@@ -28,23 +28,26 @@ export default () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <SideMenu />
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>Account List</Typography>
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <SideMenu />
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>Account List</Typography>
 
-        <IconButton size="large" edge="end" color="inherit" onClick={handleClick}>
-          <AddIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={() => { navigate('/account/edit') }}>Add Account</MenuItem>
-          <MenuItem onClick={() => { navigate('/record/edit')}}>Add Record</MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+          <IconButton size="large" edge="end" color="inherit" onClick={handleClick}>
+            <AddIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={() => { navigate('/account/edit') }}>Add Account</MenuItem>
+            <MenuItem onClick={() => { navigate('/record/edit')}}>Add Record</MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   )
 }
