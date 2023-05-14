@@ -19,13 +19,13 @@ import { ArrowBackIos } from '@mui/icons-material'
 import _ from 'lodash'
 import { enqueueSnackbar } from 'notistack'
 import * as accountService from '@/services/account'
-import * as userSettingService from '@/services/user-setting'
+import * as userService from '@/services/user'
 
 export default () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    userSettingService.getUserSetting().then(payload => {
+    userService.getUserSetting().then(payload => {
       setForm({
         default_expense_account_id: payload.default_expense_account_id ? String(payload.default_expense_account_id) : '',
       })
@@ -63,7 +63,7 @@ export default () => {
       return
     }
 
-    userSettingService.saveUserSetting({
+    userService.saveUserSetting({
       default_expense_account_id: _.toInteger(form.default_expense_account_id),
     }).then(() => {
       enqueueSnackbar('Settings saved.', { variant: 'success' })
