@@ -82,6 +82,11 @@ export default () => {
             </ListItemButton>
           </ListItem>
         ))}
+        {data.length == 0 && (
+          <ListItem>
+            <ListItemText>No data</ListItemText>
+          </ListItem>
+        )}
       </List>
     </Box>
   )

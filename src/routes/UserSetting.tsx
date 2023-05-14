@@ -102,7 +102,7 @@ export default () => {
           <InputLabel>Default Account</InputLabel>
           <Select
             value={form.default_account_id}
-            label="Default Expense Account"
+            label="Default Account"
             onChange={handleChangeDefaultAccountId}
           >
             {accounts.map(item => (
