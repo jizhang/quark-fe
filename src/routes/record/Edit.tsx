@@ -26,6 +26,7 @@ import { useConfirm } from "material-ui-confirm";
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import * as consts from '@/common/consts'
+import * as userService from '@/services/user'
 import * as accountService from '@/services/account'
 import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
@@ -209,6 +210,19 @@ export default () => {
       setCategories(payload.data)
     })
   }, [])
+
+  useEffect(() => {
+    if (!recordId) {
+      userService.getUserSetting().then(payload => {
+        if (payload.default_account_id) {
+          setForm({
+            ...form,
+            accountId: String(payload.default_account_id),
+          })
+        }
+      })
+    }
+  }, [recordId])
 
   return (
     <Box>

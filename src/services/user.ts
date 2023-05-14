@@ -15,8 +15,8 @@ export async function login(form: LoginForm): Promise<CurrentUser> {
   return post('/api/user/login', form)
 }
 
-interface UserSetting {
-  default_expense_account_id: number
+export interface UserSetting {
+  default_account_id: number
 }
 
 export async function getUserSetting(): Promise<UserSetting> {

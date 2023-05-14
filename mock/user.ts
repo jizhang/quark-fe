@@ -9,7 +9,7 @@ function login() {
 
 function getUserSetting() {
   return {
-    default_expense_account_id: 1,
+    default_account_id: 1,
   }
 }
 

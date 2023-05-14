@@ -27,23 +27,23 @@ export default () => {
   useEffect(() => {
     userService.getUserSetting().then(payload => {
       setForm({
-        default_expense_account_id: payload.default_expense_account_id ? String(payload.default_expense_account_id) : '',
+        default_account_id: payload.default_account_id ? String(payload.default_account_id) : '',
       })
     })
   }, [])
 
   const [form, setForm] = useState({
-    default_expense_account_id: '',
+    default_account_id: '',
   })
 
   const [errors, setErrors] = useState({
-    default_expense_account_id: '',
+    default_account_id: '',
   })
 
-  function handleChangeDefaultExpenseAccountId(event: SelectChangeEvent) {
+  function handleChangeDefaultAccountId(event: SelectChangeEvent) {
     setForm({
       ...form,
-      default_expense_account_id: event.target.value,
+      default_account_id: event.target.value,
     })
   }
 
@@ -51,11 +51,11 @@ export default () => {
     event.preventDefault()
 
     const errors = {
-      default_expense_account_id: '',
+      default_account_id: '',
     }
 
-    if (!form.default_expense_account_id) {
-      errors.default_expense_account_id = 'Required'
+    if (!form.default_account_id) {
+      errors.default_account_id = 'Required'
     }
 
     setErrors(errors)
@@ -64,7 +64,7 @@ export default () => {
     }
 
     userService.saveUserSetting({
-      default_expense_account_id: _.toInteger(form.default_expense_account_id),
+      default_account_id: _.toInteger(form.default_account_id),
     }).then(() => {
       enqueueSnackbar('Settings saved.', { variant: 'success' })
       navigate('/')
@@ -98,18 +98,18 @@ export default () => {
       </AppBar>
       <Toolbar />
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
-        <FormControl error={!!errors.default_expense_account_id}>
-          <InputLabel>Default Expense Account</InputLabel>
+        <FormControl error={!!errors.default_account_id}>
+          <InputLabel>Default Account</InputLabel>
           <Select
-            value={form.default_expense_account_id}
+            value={form.default_account_id}
             label="Default Expense Account"
-            onChange={handleChangeDefaultExpenseAccountId}
+            onChange={handleChangeDefaultAccountId}
           >
             {accounts.map(item => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>
-          <FormHelperText>{errors.default_expense_account_id}</FormHelperText>
+          <FormHelperText>{errors.default_account_id}</FormHelperText>
         </FormControl>
         <Button variant="contained" type="submit">Save</Button>
       </Stack>
