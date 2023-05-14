@@ -31,6 +31,11 @@ export default () => {
     navigate('/record/list')
   }
 
+  function gotoSettings() {
+    setOpen(false)
+    navigate('/user-setting')
+  }
+
   return (
     <>
       <IconButton
@@ -55,7 +60,7 @@ export default () => {
             <ListItemIcon><NotesIcon /></ListItemIcon>
             <ListItemText>Records</ListItemText>
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton onClick={gotoSettings}>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText>Settings</ListItemText>
           </ListItemButton>

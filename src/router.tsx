@@ -5,6 +5,7 @@ import AccountList from './routes/account/List'
 import AccountEdit from './routes/account/Edit'
 import RecordList from './routes/record/List'
 import RecordEdit from './routes/record/Edit'
+import UserSetting from './routes/UserSetting'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     path: '/record/edit',
     element: <RecordEdit />,
   },
+  {
+    path: '/user-setting',
+    element: <UserSetting />,
+  }
 ])
 
 navigateHolder.navigate = router.navigate
