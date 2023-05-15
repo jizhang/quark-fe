@@ -12,11 +12,12 @@ import {
   FormHelperText,
   InputLabel,
   Select,
-  SelectChangeEvent,
   MenuItem,
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import _ from 'lodash'
+import * as yup from 'yup'
+import { useFormik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
 import * as accountService from '@/services/account'
 import * as userService from '@/services/user'
@@ -24,52 +25,30 @@ import * as userService from '@/services/user'
 export default () => {
   const navigate = useNavigate()
 
+  const formik = useFormik({
+    initialValues: {
+      default_account_id: '',
+    },
+    validationSchema: yup.object({
+      default_account_id: yup.number().required('Required'),
+    }),
+    onSubmit: values => {
+      userService.saveUserSetting({
+        default_account_id: _.toInteger(values.default_account_id),
+      }).then(() => {
+        enqueueSnackbar('Settings saved.', { variant: 'success' })
+        navigate('/')
+      })
+    }
+  })
+
   useEffect(() => {
     userService.getUserSetting().then(payload => {
-      setForm({
+      formik.setValues({
         default_account_id: payload.default_account_id ? String(payload.default_account_id) : '',
       })
     })
   }, [])
-
-  const [form, setForm] = useState({
-    default_account_id: '',
-  })
-
-  const [errors, setErrors] = useState({
-    default_account_id: '',
-  })
-
-  function handleChangeDefaultAccountId(event: SelectChangeEvent) {
-    setForm({
-      ...form,
-      default_account_id: event.target.value,
-    })
-  }
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const errors = {
-      default_account_id: '',
-    }
-
-    if (!form.default_account_id) {
-      errors.default_account_id = 'Required'
-    }
-
-    setErrors(errors)
-    if (_(errors).values().some()) {
-      return
-    }
-
-    userService.saveUserSetting({
-      default_account_id: _.toInteger(form.default_account_id),
-    }).then(() => {
-      enqueueSnackbar('Settings saved.', { variant: 'success' })
-      navigate('/')
-    })
-  }
 
   const [accounts, setAccounts] = useState<accountService.Account[]>([])
 
@@ -97,19 +76,20 @@ export default () => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
-        <FormControl error={!!errors.default_account_id}>
+      <Stack px={2} py={3} spacing={2} component="form" onSubmit={formik.handleSubmit}>
+        <FormControl error={!!formik.errors.default_account_id}>
           <InputLabel>Default Account</InputLabel>
           <Select
-            value={form.default_account_id}
             label="Default Account"
-            onChange={handleChangeDefaultAccountId}
+            name="default_account_id"
+            value={formik.values.default_account_id}
+            onChange={formik.handleChange}
           >
             {accounts.map(item => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>
-          <FormHelperText>{errors.default_account_id}</FormHelperText>
+          <FormHelperText>{formik.errors.default_account_id}</FormHelperText>
         </FormControl>
         <Button variant="contained" type="submit">Save</Button>
       </Stack>
