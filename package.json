@@ -8,7 +8,8 @@
     "start:local": "cross-env MOCK=none vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint:ci": "true"
+    "lint": "tsc --noEmit",
+    "lint:ci": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",

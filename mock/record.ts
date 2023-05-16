@@ -9,7 +9,7 @@ function getRecordList() {
         category_name: 'Mobile',
         account_name: 'Alipay',
         record_time: '2023-05-05 08:17:00',
-        amount: -10.9,
+        amount: '-10.9',
         remark: 'chess cracker scald free ink bang verse redundant young glistening',
       },
       {
@@ -18,7 +18,7 @@ function getRecordList() {
         category_name: 'Salary',
         account_name: 'CMB',
         record_time: '2023-05-04 17:13:00',
-        amount: 12345.67,
+        amount: '12345.67',
         remark: 'Remark 2',
       },
       {
@@ -27,7 +27,7 @@ function getRecordList() {
         account_name: 'CMB',
         target_account_name: 'Alipay',
         record_time: '2023-05-03 06:32:00',
-        amount: 1000,
+        amount: '1000',
         remark: '',
       },
     ]
@@ -41,7 +41,7 @@ function getRecord() {
     category_id: 1,
     account_id: 3,
     record_time: '2023-05-05 08:17:00',
-    amount: 10.9,
+    amount: '10.9',
     remark: 'Remark 1',
   }
 }

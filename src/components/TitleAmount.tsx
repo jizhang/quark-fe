@@ -4,7 +4,7 @@ import { formatAmount } from '@/common/utils'
 
 interface Props {
   title: React.ReactNode
-  amount: number
+  amount: number | string
 }
 
 export default (props: Props) => {

@@ -48,7 +48,7 @@ export default () => {
           account_id: String(payload.account_id),
           target_account_id: payload.target_account_id ? String(payload.target_account_id) : '',
           record_time: dayjs(payload.record_time),
-          amount: String(payload.amount),
+          amount: payload.amount,
           remark: String(payload.remark),
         })
       })
@@ -100,7 +100,7 @@ export default () => {
         account_id: _.toInteger(values.account_id),
         target_account_id: values.target_account_id ? _.toInteger(values.target_account_id) : undefined,
         record_time: (values.record_time || dayjs()).format('YYYY-MM-DD HH:mm:ss'),
-        amount: _.toNumber(values.amount),
+        amount: values.amount,
         remark: values.remark,
       }
 

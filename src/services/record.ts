@@ -7,7 +7,7 @@ export interface RecordItem {
   account_name: string
   target_account_name?: string
   record_time: string
-  amount: number
+  amount: string
   remark: string
 }
 
@@ -26,7 +26,7 @@ interface RecordForm {
   account_id: number
   target_account_id?: number
   record_time: string
-  amount: number
+  amount: string
   remark: string
 }
 
