@@ -116,7 +116,7 @@ export default () => {
 
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -131,10 +131,10 @@ export default () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>{form.id ? 'Edit' : 'Add'} Account</Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
         <TextField
           label="Name"
-          autoFocus
           value={form.name}
           onChange={handleChangeName}
           error={!!errors.name}

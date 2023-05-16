@@ -54,15 +54,15 @@ export default () => {
 
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h6">Login</Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
         <TextField
           label="Username"
-          autoFocus
           value={form.username}
           onChange={handleChangeUsername}
         />

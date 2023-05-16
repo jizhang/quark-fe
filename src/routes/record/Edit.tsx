@@ -58,7 +58,7 @@ export default () => {
   const form = useFormik({
     initialValues: {
       id: '',
-      record_type: '1',
+      record_type: String(consts.RECORD_TYPE_EXPENSE),
       category_id: '',
       account_id: '',
       target_account_id: '',
@@ -76,12 +76,9 @@ export default () => {
         }),
       account_id: yup.number()
         .when('record_type', {
-          is: (value: number) => value === consts.RECORD_TYPE_EXPENSE || value === consts.RECORD_TYPE_INCOME,
-          then: schema => schema.required('Account cannot be empty.'),
-        })
-        .when('record_type', {
           is: consts.RECORD_TYPE_TRANSFER,
           then: schema => schema.required('Source account cannot be empty.'),
+          otherwise: schema => schema.required('Account cannot be empty.'),
         }),
       target_account_id: yup.number()
         .when('record_type', {
@@ -158,7 +155,7 @@ export default () => {
 
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -173,6 +170,7 @@ export default () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>Add Record</Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Stack px={2} py={3} spacing={2} component="form" onSubmit={form.handleSubmit}>
         <FormControl error={form.touched.record_type && !!form.errors.record_type}>
           <FormLabel>Type</FormLabel>
