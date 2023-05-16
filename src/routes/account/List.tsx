@@ -10,8 +10,8 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import * as service from '@/services/account'
-import { formatAmount } from '@/common/utils'
 import AccountListNav from '@/components/AccountListNav'
+import TitleAmount from '@/components/TitleAmount'
 
 const ACCOUNT_TYPE_ASSET = 1
 const ACCOUNT_TYPE_LIABILITY = 2
@@ -19,6 +19,7 @@ const ACCOUNT_TYPE_LIABILITY = 2
 interface AccountGroup {
   name: string
   accounts: service.Account[]
+  total: number
 }
 
 export default () => {
@@ -33,6 +34,7 @@ export default () => {
         groups.push({
           name: 'Assets',
           accounts: assets,
+          total: _(assets).map('balance').sum(),
         })
       }
 
@@ -41,6 +43,7 @@ export default () => {
         groups.push({
           name: 'Liabilities',
           accounts: liabilities,
+          total: _(liabilities).map('balance').sum(),
         })
       }
 
@@ -48,13 +51,20 @@ export default () => {
     })
   }, [])
 
+  const netCapital = _(groups).flatMap('accounts').map('balance').sum()
+
   return (
     <Box>
       <AccountListNav />
       <List>
+        <ListItem>
+          <ListItemText>
+            <TitleAmount title="Net capital" amount={netCapital} />
+          </ListItemText>
+        </ListItem>
         {groups.map(group => (
           <React.Fragment key={group.name}>
-            <ListSubheader>{group.name}</ListSubheader>
+            <ListSubheader><TitleAmount title={group.name} amount={group.total} /></ListSubheader>
             {group.accounts.map(item => (
               <ListItem key={item.id} disablePadding>
                 <ListItemButton
@@ -65,21 +75,13 @@ export default () => {
                   }}
                 >
                   <ListItemText>
-                    <Box display="flex">
-                      <Box flexGrow={1}>{item.name}</Box>
-                      <Box>{formatAmount(item.balance)}</Box>
-                    </Box>
+                    <TitleAmount title={item.name} amount={item.balance} />
                   </ListItemText>
                 </ListItemButton>
               </ListItem>
             ))}
           </React.Fragment>
         ))}
-        {groups.length == 0 && (
-          <ListItem>
-            <ListItemText>No data</ListItemText>
-          </ListItem>
-        )}
       </List>
     </Box>
   )

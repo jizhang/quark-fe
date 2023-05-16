@@ -17,9 +17,9 @@ import {
 } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
-import { formatAmount } from '@/common/utils'
 import * as service from '@/services/record'
 import Nav from '@/components/RecordListNav'
+import TitleAmount from '@/components/TitleAmount'
 
 export default () => {
   const [data, setData] = useState<service.RecordItem[]>([])
@@ -37,9 +37,9 @@ export default () => {
   }
 
   function getPrimaryText(item: service.RecordItem) {
-    let text: React.ReactNode
+    let title: React.ReactNode
     if (item.record_type === consts.RECORD_TYPE_TRANSFER) {
-      text = (
+      title = (
         <Box display="flex">
           {item.account_name}
           <ArrowRight />
@@ -47,15 +47,10 @@ export default () => {
         </Box>
       )
     } else {
-      text = item.category_name
+      title = item.category_name
     }
 
-    return (
-      <Box display="flex">
-        <Box flexGrow={1}>{text}</Box>
-        <Box>{formatAmount(item.amount)}</Box>
-      </Box>
-    )
+    return <TitleAmount title={title} amount={item.amount} />
   }
 
   function getSecondaryText(item: service.RecordItem) {
