@@ -2,9 +2,9 @@ import { MockMethod } from 'vite-plugin-mock'
 
 function getCategoryChart() {
   const data = [
-    { key: 'Food', value: 1000, percent: 0.6536 },
-    { key: 'Drink', value: 500, percent: 0.3268 },
-    { key: 'Telecom', value: 30, percent: 0.0196 },
+    { category_id: 1, category_name: 'Food', amount: 1000, percent: 0.6536 },
+    { category_id: 2, category_name: 'Drink', amount: 500, percent: 0.3268 },
+    { category_id: 3, category_name: 'Telecom', amount: 30, percent: 0.0196 },
   ]
   return { data }
 }

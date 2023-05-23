@@ -1,8 +1,9 @@
 import { get } from '@/common/request'
 
 export interface ChartItem {
-  key: string
-  value: number
+  category_id: number
+  category_name: string
+  amount: string
   percent: number
 }
 

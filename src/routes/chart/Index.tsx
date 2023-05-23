@@ -17,6 +17,7 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import dayjs from 'dayjs'
+import * as consts from '@/common/consts'
 import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
 import TitleAmount from '@/components/TitleAmount'
@@ -45,7 +46,7 @@ export default () => {
   }
 
   const [form, setForm] = useState({
-    type: 'expense',
+    type: String(consts.RECORD_TYPE_EXPENSE),
     month: dayjs().format('YYYYMM'),
   })
 
@@ -97,8 +98,8 @@ export default () => {
             label="Type"
             onChange={handleChangeType}
           >
-            <MenuItem value="expense">Expense</MenuItem>
-            <MenuItem value="income">Income</MenuItem>
+            <MenuItem value={String(consts.RECORD_TYPE_EXPENSE)}>Expense</MenuItem>
+            <MenuItem value={String(consts.RECORD_TYPE_INCOME)}>Income</MenuItem>
           </Select>
         </FormControl>
         <FormControl size="small" fullWidth>
@@ -117,12 +118,17 @@ export default () => {
 
       <List>
         {data.map(item => (
-          <ListItem key={item.key}>
+          <ListItem key={item.category_id}>
             <ListItemText secondary={getProgress(item.percent)}>
-              <TitleAmount title={item.key} amount={item.value} />
+              <TitleAmount title={item.category_name} amount={item.amount} />
             </ListItemText>
           </ListItem>
         ))}
+        {data.length == 0 && (
+          <ListItem>
+            <ListItemText>No data</ListItemText>
+          </ListItem>
+        )}
       </List>
     </Box>
   )
