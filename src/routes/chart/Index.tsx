@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   AppBar,
@@ -17,23 +17,32 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import dayjs from 'dayjs'
+import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
 import TitleAmount from '@/components/TitleAmount'
 
 export default () => {
-  const data = [
-    { key: 'Food', value: 1000, percent: 0.6536 },
-    { key: 'Drink', value: 500, percent: 0.3268 },
-    { key: 'Telecom', value: 30, percent: 0.0196 },
-  ]
+  const [minDate, setMinDate] = useState(dayjs())
 
-  const months = [
-    { key: '202301', value: 'Jan 2023' },
-    { key: '202302', value: 'Feb 2023' },
-    { key: '202303', value: 'Mar 2023' },
-    { key: '202304', value: 'Apr 2023' },
-    { key: '202305', value: 'May 2023' },
-  ]
+  useEffect(() => {
+    chartService.getMinDate().then(minDate => {
+      setMinDate(dayjs(String(minDate)))
+    })
+  }, [])
+
+  function getMonths(minDate: dayjs.Dayjs) {
+    let current = minDate.startOf('month')
+    const end = dayjs().endOf('month')
+    const result = []
+    while (current.isBefore(end)) {
+      result.push({
+        key: current.format('YYYYMM'),
+        value: current.format('MMM YYYY'),
+      })
+      current = current.add(1, 'month')
+    }
+    return result
+  }
 
   const [form, setForm] = useState({
     type: 'expense',
@@ -53,6 +62,15 @@ export default () => {
       month: event.target.value,
     })
   }
+
+  const [data, setData] = useState<chartService.ChartItem[]>([])
+
+  useEffect(() => {
+    chartService.getCategoryChart(form.type, form.month).then(payload => {
+      setData(payload.data)
+    })
+  }, [form.type, form.month])
+
 
   function getProgress(percent: number) {
     const value = _.round(percent * 100)
@@ -90,7 +108,7 @@ export default () => {
             label="Month"
             onChange={handleChangeMonth}
           >
-            {months.map(item => (
+            {getMonths(minDate).map(item => (
               <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
             ))}
           </Select>
