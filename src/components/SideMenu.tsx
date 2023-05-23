@@ -15,6 +15,7 @@ import {
   Notes as NotesIcon,
   Settings as SettingsIcon,
   AccountBalanceWallet,
+  BarChart,
 } from '@mui/icons-material'
 
 export default () => {
@@ -29,6 +30,11 @@ export default () => {
   function gotoRecords() {
     setOpen(false)
     navigate('/record/list')
+  }
+
+  function gotoCharts() {
+    setOpen(false)
+    navigate('/chart/index')
   }
 
   function gotoSettings() {
@@ -59,6 +65,10 @@ export default () => {
           <ListItemButton onClick={gotoRecords}>
             <ListItemIcon><NotesIcon /></ListItemIcon>
             <ListItemText>Records</ListItemText>
+          </ListItemButton>
+          <ListItemButton onClick={gotoCharts}>
+            <ListItemIcon><BarChart /></ListItemIcon>
+            <ListItemText>Charts</ListItemText>
           </ListItemButton>
           <ListItemButton onClick={gotoSettings}>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
