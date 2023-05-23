@@ -1,14 +1,19 @@
 import { get } from '@/common/request'
 
-export interface ChartItem {
-  category_id: number
-  category_name: string
+export interface ChartGroup {
+  id: number
+  name: string
   amount: string
-  percent: number
+  categories: {
+    id: number
+    name: string
+    amount: string
+    percent: number
+  }[]
 }
 
-export async function getCategoryChart(type: string, month: string): Promise<{ data: ChartItem[] }> {
-  return get('/api/chart/category', { type, month })
+export async function getCategoryChart(month: string): Promise<{ groups: ChartGroup[] }> {
+  return get('/api/chart/category', { month })
 }
 
 export async function getMinDate(): Promise<number> {
