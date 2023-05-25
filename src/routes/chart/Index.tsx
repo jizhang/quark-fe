@@ -14,13 +14,14 @@ import {
   ListSubheader,
   ListItem,
   ListItemText,
-  LinearProgress,
 } from '@mui/material'
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
 import TitleAmount from '@/components/TitleAmount'
+import Progress from '@/components/chart/Progress'
+import Investment from '@/components/chart/Investment'
 
 export default () => {
   const [minDate, setMinDate] = useState(dayjs())
@@ -72,13 +73,6 @@ export default () => {
     })
   }, [form.type, form.month])
 
-  function getProgress(percent: number) {
-    const value = _.round(percent * 100)
-    return (
-      <LinearProgress variant="determinate" value={value} />
-    )
-  }
-
   return (
     <Box>
       <AppBar position="fixed">
@@ -98,6 +92,7 @@ export default () => {
             onChange={handleChangeType}
           >
             <MenuItem value="category">Category</MenuItem>
+            <MenuItem value="investment">Investment</MenuItem>
           </Select>
         </FormControl>
         <FormControl size="small" fullWidth>
@@ -114,22 +109,28 @@ export default () => {
         </FormControl>
       </Stack>
 
-      <List>
-        {groups.map(group => (
-          <React.Fragment key={group.id}>
-            <ListSubheader>
-              <TitleAmount title={group.name} amount={group.amount} />
-            </ListSubheader>
-            {group.categories.map(item => (
-              <ListItem key={item.id}>
-                <ListItemText secondary={getProgress(item.percent)}>
-                  <TitleAmount title={item.name} amount={item.amount} />
-                </ListItemText>
-              </ListItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </List>
+      {form.type === 'category' && (
+        <List>
+          {groups.map(group => (
+            <React.Fragment key={group.id}>
+              <ListSubheader>
+                <TitleAmount title={group.name} amount={group.amount} />
+              </ListSubheader>
+              {group.categories.map(item => (
+                <ListItem key={item.id}>
+                  <ListItemText secondary={<Progress percent={item.percent} />}>
+                    <TitleAmount title={item.name} amount={item.amount} />
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </React.Fragment>
+          ))}
+        </List>
+      )}
+
+      {form.type === 'investment' && (
+        <Investment month={form.month} />
+      )}
     </Box>
   )
 }

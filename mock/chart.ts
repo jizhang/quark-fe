@@ -1,4 +1,11 @@
+import _ from 'lodash'
 import { MockMethod } from 'vite-plugin-mock'
+
+function getMinDate() {
+  return {
+    min_date: 20230101,
+  }
+}
 
 function getCategoryChart() {
   const groups = [
@@ -26,19 +33,27 @@ function getCategoryChart() {
   return { groups }
 }
 
-function getMinDate() {
-  return {
-    min_date: 20230101,
-  }
+function getInvestmentChart() {
+  const accounts = [
+    { id: 1, name: 'Alipay', amount: '2000', percent: 0.9524 },
+    { id: 2, name: 'CMB', amount: '100', percent: 0.0476 },
+    { id: 3, name: 'Snowball', amount: '-500', percent: 0.0 },
+  ]
+  const total = _(accounts).map('amount').map(_.toNumber).sum() + ''
+  return { total, accounts }
 }
 
 export default [
+  {
+    url: '/api/chart/min-date',
+    response: getMinDate,
+  },
   {
     url: '/api/chart/category',
     response: getCategoryChart,
   },
   {
-    url: '/api/chart/min-date',
-    response: getMinDate,
+    url: '/api/chart/investment',
+    response: getInvestmentChart,
   },
 ] as MockMethod[]
