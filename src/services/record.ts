@@ -1,5 +1,9 @@
 import { get, post } from '@/common/request'
 
+export interface FilterForm {
+  record_type?: number
+}
+
 export interface RecordItem {
   id: number
   record_type: number
@@ -15,8 +19,8 @@ interface RecordListResponse {
   data: RecordItem[]
 }
 
-export async function getRecordList(): Promise<RecordListResponse> {
-  return get('/api/record/list')
+export async function getRecordList(filterForm: FilterForm): Promise<RecordListResponse> {
+  return get('/api/record/list', filterForm)
 }
 
 interface RecordForm {

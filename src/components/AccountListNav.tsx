@@ -7,9 +7,13 @@ import {
   Typography,
   Menu,
   MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material'
 import {
   Add as AddIcon,
+  Notes as NotesIcon,
+  AccountBalanceWallet,
 } from '@mui/icons-material'
 import SideMenu from '@/components/SideMenu'
 
@@ -42,8 +46,14 @@ export default () => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={() => { navigate('/account/edit') }}>Add Account</MenuItem>
-            <MenuItem onClick={() => { navigate('/record/edit')}}>Add Record</MenuItem>
+            <MenuItem onClick={() => { navigate('/account/edit') }}>
+              <ListItemIcon><AccountBalanceWallet /></ListItemIcon>
+              <ListItemText>Add Account</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => { navigate('/record/edit') }}>
+              <ListItemIcon><NotesIcon /></ListItemIcon>
+              <ListItemText>Add Record</ListItemText>
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
