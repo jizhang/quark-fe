@@ -15,11 +15,16 @@ import {
   MoreVert,
   FilterAlt,
 } from '@mui/icons-material'
+import type { FilterForm } from '@/services/record'
 import SideMenu from '@/components/SideMenu'
 import FilterDialog from './FilterDialog'
-import type { Form as FilterForm } from './FilterDialog'
 
-export default () => {
+interface Props {
+  filterForm: FilterForm
+  onChangeFilterForm: (values: FilterForm) => void
+}
+
+export default (props: Props) => {
   const navigate = useNavigate()
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -33,10 +38,6 @@ export default () => {
     setAnchorEl(null);
   }
 
-  const [filterForm, setFilterForm] = useState<FilterForm>({
-    record_type: '',
-  })
-
   const [filterDialogOpen, setFilterDialogOpen] = useState(false)
 
   function handleOpenFilterDialog() {
@@ -46,7 +47,7 @@ export default () => {
 
   function handleApplyFilters(values: FilterForm) {
     handleCloseFilters()
-    setFilterForm(values)
+    props.onChangeFilterForm(values)
   }
 
   function handleCloseFilters() {
@@ -78,7 +79,7 @@ export default () => {
             </MenuItem>
           </Menu>
           <FilterDialog
-            values={filterForm}
+            values={props.filterForm}
             open={filterDialogOpen}
             onApply={handleApplyFilters}
             onClose={handleCloseFilters}

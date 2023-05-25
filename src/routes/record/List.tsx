@@ -22,13 +22,17 @@ import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
 export default () => {
+  const [filterForm, setFilterForm] = useState<service.FilterForm>({
+    record_type: '',
+  })
+
   const [data, setData] = useState<service.RecordItem[]>([])
 
   useEffect(() => {
-    service.getRecordList().then(payload => {
+    service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
-  }, [])
+  }, [filterForm])
 
   function getIcon(recordType: number) {
     if (recordType === consts.RECORD_TYPE_EXPENSE) return <UploadIcon />
@@ -60,7 +64,7 @@ export default () => {
 
   return (
     <Box>
-      <Nav />
+      <Nav filterForm={filterForm} onChangeFilterForm={setFilterForm} />
       <List>
         {data.map(item => (
           <ListItem

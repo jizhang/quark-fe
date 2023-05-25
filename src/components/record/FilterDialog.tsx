@@ -12,15 +12,12 @@ import {
 } from '@mui/material'
 import { useFormik } from 'formik'
 import * as consts from '@/common/consts'
-
-export interface Form {
-  record_type: string
-}
+import type { FilterForm } from '@/services/record'
 
 interface Props {
-  values: Form
+  values: FilterForm
   open: boolean
-  onApply: (values: Form) => void,
+  onApply: (values: FilterForm) => void,
   onClose: () => void,
 }
 
