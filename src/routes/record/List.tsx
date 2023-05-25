@@ -18,7 +18,7 @@ import {
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
 import * as service from '@/services/record'
-import Nav from '@/components/RecordListNav'
+import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
 export default () => {
