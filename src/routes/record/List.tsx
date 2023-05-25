@@ -22,10 +22,7 @@ import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
 export default () => {
-  const [filterForm, setFilterForm] = useState<service.FilterForm>({
-    record_type: '',
-  })
-
+  const [filterForm, setFilterForm] = useState<service.FilterForm>({})
   const [data, setData] = useState<service.RecordItem[]>([])
 
   useEffect(() => {

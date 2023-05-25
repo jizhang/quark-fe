@@ -10,6 +10,7 @@ import {
   MenuItem,
   Button,
 } from '@mui/material'
+import _ from 'lodash'
 import { useFormik } from 'formik'
 import * as consts from '@/common/consts'
 import type { FilterForm } from '@/services/record'
@@ -23,10 +24,14 @@ interface Props {
 
 export default (props: Props) => {
   const form = useFormik({
-    initialValues: props.values,
+    initialValues: {
+      record_type: props.values.record_type ? String(props.values.record_type) : '',
+    },
 
     onSubmit: (values) => {
-      props.onApply(values)
+      props.onApply({
+        record_type: values.record_type ? _.toInteger(values.record_type) : undefined,
+      })
     },
   })
 
