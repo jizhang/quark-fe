@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -24,6 +25,8 @@ interface Props {
 
 export default (props: Props) => {
   const form = useFormik({
+    enableReinitialize: true,
+
     initialValues: {
       record_type: props.values.record_type ? String(props.values.record_type) : '',
     },
@@ -46,8 +49,13 @@ export default (props: Props) => {
     form.submitForm()
   }
 
+  function handleClose() {
+    form.resetForm()
+    props.onClose()
+  }
+
   return (
-    <Dialog open={props.open} onClose={props.onClose} fullWidth>
+    <Dialog open={props.open} fullWidth>
       <DialogTitle>Filter</DialogTitle>
       <DialogContent>
         <Stack py={2} spacing={2}>
@@ -67,7 +75,7 @@ export default (props: Props) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={handleClearAll}>Clear All</Button>
         <Button onClick={handleApply}>Apply</Button>
       </DialogActions>
