@@ -2,6 +2,8 @@ import { get, post } from '@/common/request'
 
 export interface FilterForm {
   record_type?: number
+  category_id?: number
+  account_id?: number
 }
 
 export interface RecordItem {
