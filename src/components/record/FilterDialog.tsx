@@ -83,6 +83,12 @@ export default (props: Props) => {
     })
   }, [])
 
+  function showCategory() {
+    return _([consts.RECORD_TYPE_EXPENSE, consts.RECORD_TYPE_INCOME])
+      .map(_.toString)
+      .includes(form.values.record_type)
+  }
+
   return (
     <Dialog open={props.open} fullWidth>
       <DialogTitle>Filter</DialogTitle>
@@ -102,7 +108,7 @@ export default (props: Props) => {
               <MenuItem value={String(consts.RECORD_TYPE_TRANSFER)}>Transfer</MenuItem>
             </Select>
           </FormControl>
-          <FormControl disabled={form.values.record_type === VALUE_ALL}>
+          <FormControl disabled={!showCategory()}>
             <InputLabel>Category</InputLabel>
             <Select
               name="category_id"
@@ -111,7 +117,7 @@ export default (props: Props) => {
               onChange={form.handleChange}
             >
               <MenuItem value="all">All</MenuItem>
-              {_.filter(categories, ['id', _.toInteger(form.values.record_type)]).map(item => (
+              {_.filter(categories, ['type', _.toInteger(form.values.record_type)]).map(item => (
                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
               ))}
             </Select>
