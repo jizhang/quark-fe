@@ -11,7 +11,7 @@ import {
   MenuItem,
   Button,
 } from '@mui/material'
-import { SelectChangeEvent } from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material'
 import _ from 'lodash'
 import { useFormik } from 'formik'
 import * as consts from '@/common/consts'
@@ -89,7 +89,7 @@ export default (props: Props) => {
       <DialogContent>
         <Stack pt={1} spacing={2}>
           <FormControl>
-            <InputLabel shrink>Record Type</InputLabel>
+            <InputLabel>Record Type</InputLabel>
             <Select
               name="record_type"
               value={form.values.record_type}
@@ -117,7 +117,7 @@ export default (props: Props) => {
             </Select>
           </FormControl>
           <FormControl>
-            <InputLabel shrink>Account</InputLabel>
+            <InputLabel>Account</InputLabel>
             <Select
               name="account_id"
               value={form.values.account_id}
