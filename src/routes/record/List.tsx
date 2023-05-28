@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -15,20 +15,42 @@ import {
   SwapHoriz,
   ArrowRight,
 } from '@mui/icons-material'
+import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
 import * as service from '@/services/record'
 import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
+function optInt(params: URLSearchParams, key: string) {
+  const value = params.get(key)
+  return value ? _.toInteger(value) : undefined
+}
+
+function parseFilterForm(params: URLSearchParams) {
+  const form: service.FilterForm = {
+    record_type: optInt(params, 'record_type'),
+    account_id: optInt(params, 'account_id'),
+  }
+
+  if (form.record_type) {
+    form.category_id = optInt(params, 'category_id')
+  }
+
+  return form
+}
+
 export default () => {
-  const [filterForm, setFilterForm] = useState<service.FilterForm>({})
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [filterForm, setFilterForm] = useState<service.FilterForm>(parseFilterForm(searchParams))
   const [data, setData] = useState<service.RecordItem[]>([])
 
   useEffect(() => {
     service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
+
+    setSearchParams(_(filterForm).pickBy().mapValues(_.toString).value())
   }, [filterForm])
 
   function getIcon(recordType: number) {
