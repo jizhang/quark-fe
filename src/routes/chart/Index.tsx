@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Box,
   AppBar,
@@ -10,17 +10,12 @@ import {
   Select,
   SelectChangeEvent,
   MenuItem,
-  List,
-  ListSubheader,
-  ListItem,
-  ListItemText,
 } from '@mui/material'
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
-import TitleAmount from '@/components/TitleAmount'
-import Progress from '@/components/chart/Progress'
+import Category from '@/components/chart/Category'
 import Investment from '@/components/chart/Investment'
 
 export default () => {
@@ -65,14 +60,6 @@ export default () => {
     })
   }
 
-  const [groups, setGroups] = useState<chartService.ChartGroup[]>([])
-
-  useEffect(() => {
-    chartService.getCategoryChart(form.month).then(payload => {
-      setGroups(payload.groups)
-    })
-  }, [form.type, form.month])
-
   return (
     <Box>
       <AppBar position="fixed">
@@ -110,22 +97,7 @@ export default () => {
       </Stack>
 
       {form.type === 'category' && (
-        <List>
-          {groups.map(group => (
-            <React.Fragment key={group.id}>
-              <ListSubheader>
-                <TitleAmount title={group.name} amount={group.amount} />
-              </ListSubheader>
-              {group.categories.map(item => (
-                <ListItem key={item.id}>
-                  <ListItemText secondary={<Progress percent={item.percent} />}>
-                    <TitleAmount title={item.name} amount={item.amount} />
-                  </ListItemText>
-                </ListItem>
-              ))}
-            </React.Fragment>
-          ))}
-        </List>
+        <Category month={form.month} />
       )}
 
       {form.type === 'investment' && (

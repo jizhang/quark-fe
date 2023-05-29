@@ -24,6 +24,8 @@ export async function getCategoryChart(month: string): Promise<{ groups: ChartGr
 }
 
 export interface InvestmentChart {
+  record_type: number
+  category_id: number
   total: string
   accounts: ChartItem[]
 }
