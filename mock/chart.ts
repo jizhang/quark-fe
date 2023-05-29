@@ -40,7 +40,13 @@ function getInvestmentChart() {
     { id: 3, name: 'Snowball', amount: '-500', percent: 0.0 },
   ]
   const total = _(accounts).map('amount').map(_.toNumber).sum() + ''
-  return { total, accounts }
+
+  return {
+    record_type: 2,
+    category_id: 6,
+    total,
+    accounts,
+  }
 }
 
 export default [
