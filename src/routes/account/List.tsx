@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Box,
   List,
   ListItem,
   ListItemText,
-  ListItemButton,
   ListSubheader,
 } from '@mui/material'
 import _ from 'lodash'
 import * as service from '@/services/account'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
+import LinkItem from '@/components/account/LinkItem'
+import EditingItem from '@/components/account/EditingItem'
 
 const ACCOUNT_TYPE_ASSET = 1
 const ACCOUNT_TYPE_LIABILITY = 2
@@ -53,9 +53,11 @@ export default () => {
 
   const netCapital = _(groups).flatMap('accounts').map('balance').sum()
 
+  const [editing, setEditing] = useState(false)
+
   return (
     <Box>
-      <Nav />
+      <Nav editing={editing} setEditing={setEditing} />
       <List>
         <ListItem>
           <ListItemText>
@@ -64,21 +66,19 @@ export default () => {
         </ListItem>
         {groups.map(group => (
           <React.Fragment key={group.name}>
-            <ListSubheader><TitleAmount title={group.name} amount={group.total} /></ListSubheader>
+            <ListSubheader>
+              {editing ? group.name : (
+                <TitleAmount title={group.name} amount={group.total} />
+              )}
+            </ListSubheader>
             {group.accounts.map(item => (
-              <ListItem key={item.id} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to={{
-                    pathname: '/account/edit',
-                    search: `id=${item.id}`,
-                  }}
-                >
-                  <ListItemText>
-                    <TitleAmount title={item.name} amount={item.balance} />
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
+              <React.Fragment key={item.id}>
+                {editing ? (
+                  <EditingItem account={item} />
+                ) : (
+                  <LinkItem account={item} />
+                )}
+              </React.Fragment>
             ))}
           </React.Fragment>
         ))}
