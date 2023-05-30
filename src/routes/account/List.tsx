@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import * as service from '@/services/account'
-import AccountListNav from '@/components/AccountListNav'
+import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
 const ACCOUNT_TYPE_ASSET = 1
@@ -55,7 +55,7 @@ export default () => {
 
   return (
     <Box>
-      <AccountListNav />
+      <Nav />
       <List>
         <ListItem>
           <ListItemText>
