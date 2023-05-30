@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Box,
   List,
   ListItem,
   ListItemText,
-  ListItemButton,
   ListSubheader,
 } from '@mui/material'
 import _ from 'lodash'
 import * as service from '@/services/account'
-import AccountListNav from '@/components/AccountListNav'
+import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
+import LinkItem from '@/components/account/LinkItem'
+import EditingItem from '@/components/account/EditingItem'
 
 const ACCOUNT_TYPE_ASSET = 1
 const ACCOUNT_TYPE_LIABILITY = 2
@@ -22,40 +22,51 @@ interface AccountGroup {
   total: number
 }
 
+function makeGroups(accounts: service.Account[]) {
+  const groups: AccountGroup[] = []
+
+  const assets = _.filter(accounts, ['type', ACCOUNT_TYPE_ASSET])
+  if (assets.length > 0) {
+    groups.push({
+      name: 'Assets',
+      accounts: assets,
+      total: _(assets).map('balance').sum(),
+    })
+  }
+
+  const liabilities = _.filter(accounts, ['type', ACCOUNT_TYPE_LIABILITY])
+  if (liabilities.length > 0) {
+    groups.push({
+      name: 'Liabilities',
+      accounts: liabilities,
+      total: _(liabilities).map('balance').sum(),
+    })
+  }
+
+  return groups
+}
+
 export default () => {
-  const [groups, setGroups] = useState<AccountGroup[]>([])
+  const [accounts, setAccounts] = useState<service.Account[]>([])
 
   useEffect(() => { // TODO Loading
-    service.getAccountList().then((payload) => {
-      const groups: AccountGroup[] = []
-
-      const assets = _.filter(payload.data, ['type', ACCOUNT_TYPE_ASSET])
-      if (assets.length > 0) {
-        groups.push({
-          name: 'Assets',
-          accounts: assets,
-          total: _(assets).map('balance').sum(),
-        })
-      }
-
-      const liabilities = _.filter(payload.data, ['type', ACCOUNT_TYPE_LIABILITY])
-      if (liabilities.length > 0) {
-        groups.push({
-          name: 'Liabilities',
-          accounts: liabilities,
-          total: _(liabilities).map('balance').sum(),
-        })
-      }
-
-      setGroups(groups)
+    service.getAccountList().then(payload => {
+      setAccounts(payload.data)
     })
   }, [])
 
+  const groups = makeGroups(accounts)
   const netCapital = _(groups).flatMap('accounts').map('balance').sum()
+
+  const [editing, setEditing] = useState(false)
+
+  function handleDelete(id: number) {
+    setAccounts(_.reject(accounts, ['id', id]))
+  }
 
   return (
     <Box>
-      <AccountListNav />
+      <Nav editing={editing} setEditing={setEditing} />
       <List>
         <ListItem>
           <ListItemText>
@@ -64,21 +75,19 @@ export default () => {
         </ListItem>
         {groups.map(group => (
           <React.Fragment key={group.name}>
-            <ListSubheader><TitleAmount title={group.name} amount={group.total} /></ListSubheader>
+            <ListSubheader>
+              {editing ? group.name : (
+                <TitleAmount title={group.name} amount={group.total} />
+              )}
+            </ListSubheader>
             {group.accounts.map(item => (
-              <ListItem key={item.id} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to={{
-                    pathname: '/account/edit',
-                    search: `id=${item.id}`,
-                  }}
-                >
-                  <ListItemText>
-                    <TitleAmount title={item.name} amount={item.balance} />
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
+              <React.Fragment key={item.id}>
+                {editing ? (
+                  <EditingItem account={item} onDelete={handleDelete} />
+                ) : (
+                  <LinkItem account={item} />
+                )}
+              </React.Fragment>
             ))}
           </React.Fragment>
         ))}
