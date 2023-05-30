@@ -22,38 +22,47 @@ interface AccountGroup {
   total: number
 }
 
+function makeGroups(accounts: service.Account[]) {
+  const groups: AccountGroup[] = []
+
+  const assets = _.filter(accounts, ['type', ACCOUNT_TYPE_ASSET])
+  if (assets.length > 0) {
+    groups.push({
+      name: 'Assets',
+      accounts: assets,
+      total: _(assets).map('balance').sum(),
+    })
+  }
+
+  const liabilities = _.filter(accounts, ['type', ACCOUNT_TYPE_LIABILITY])
+  if (liabilities.length > 0) {
+    groups.push({
+      name: 'Liabilities',
+      accounts: liabilities,
+      total: _(liabilities).map('balance').sum(),
+    })
+  }
+
+  return groups
+}
+
 export default () => {
-  const [groups, setGroups] = useState<AccountGroup[]>([])
+  const [accounts, setAccounts] = useState<service.Account[]>([])
 
   useEffect(() => { // TODO Loading
-    service.getAccountList().then((payload) => {
-      const groups: AccountGroup[] = []
-
-      const assets = _.filter(payload.data, ['type', ACCOUNT_TYPE_ASSET])
-      if (assets.length > 0) {
-        groups.push({
-          name: 'Assets',
-          accounts: assets,
-          total: _(assets).map('balance').sum(),
-        })
-      }
-
-      const liabilities = _.filter(payload.data, ['type', ACCOUNT_TYPE_LIABILITY])
-      if (liabilities.length > 0) {
-        groups.push({
-          name: 'Liabilities',
-          accounts: liabilities,
-          total: _(liabilities).map('balance').sum(),
-        })
-      }
-
-      setGroups(groups)
+    service.getAccountList().then(payload => {
+      setAccounts(payload.data)
     })
   }, [])
 
+  const groups = makeGroups(accounts)
   const netCapital = _(groups).flatMap('accounts').map('balance').sum()
 
   const [editing, setEditing] = useState(false)
+
+  function handleDelete(id: number) {
+    setAccounts(_.reject(accounts, ['id', id]))
+  }
 
   return (
     <Box>
@@ -74,7 +83,7 @@ export default () => {
             {group.accounts.map(item => (
               <React.Fragment key={item.id}>
                 {editing ? (
-                  <EditingItem account={item} />
+                  <EditingItem account={item} onDelete={handleDelete} />
                 ) : (
                   <LinkItem account={item} />
                 )}

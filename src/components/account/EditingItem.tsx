@@ -10,15 +10,19 @@ import {
   Delete as DeleteIcon,
   DragHandle,
 } from '@mui/icons-material'
-import type { Account } from '@/services/account'
+import { useConfirm } from 'material-ui-confirm'
+import _ from 'lodash'
+import * as accountService from '@/services/account'
 
 interface Props {
-  account: Account
+  account: accountService.Account
+  onDelete: (id: number) => void
 }
 
 export default (props: Props) => {
   const { account } = props
 
+  const confirm = useConfirm()
   const navigate = useNavigate()
 
   function handleEdit() {
@@ -29,7 +33,11 @@ export default (props: Props) => {
   }
 
   function handleDelete() {
-    alert('Not implemented yet.')
+    confirm().then(() => {
+      accountService.deleteAccount(account.id).then(() => {
+        props.onDelete(account.id)
+      })
+    }, _.noop)
   }
 
   function handleDragDrop() {
