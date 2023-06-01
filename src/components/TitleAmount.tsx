@@ -9,7 +9,7 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <Box display="flex">
+    <Box display="flex" key={String(props.amount)}>
       <Box flexGrow={1}>{props.title}</Box>
       <Box>{formatAmount(props.amount)}</Box>
     </Box>
