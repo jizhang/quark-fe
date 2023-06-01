@@ -7,7 +7,6 @@ import {
   ListItemButton,
   ListItemText,
 } from '@mui/material'
-import _ from 'lodash'
 import qs from 'qs'
 import * as consts from '@/common/consts'
 import * as chartService from '@/services/chart'

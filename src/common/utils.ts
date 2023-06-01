@@ -7,6 +7,4 @@ export function formatAmount(amount: number | string) {
   })
 }
 
-export const navigateHolder = {
-  navigate: (() => {}) as NavigateFunction,
-}
+export const navigateHolder: { navigate?: NavigateFunction } = {}

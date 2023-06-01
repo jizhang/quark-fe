@@ -39,7 +39,7 @@ export async function request(url: string, config?: RequestInit) {
 
   // 401 Unauthorized
   if (response.status === 401) {
-    navigateHolder.navigate('/login')
+    navigateHolder.navigate?.('/login')
     throw new RequestError(401, null)
   }
 
