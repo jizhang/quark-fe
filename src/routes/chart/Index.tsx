@@ -11,7 +11,6 @@ import {
   SelectChangeEvent,
   MenuItem,
 } from '@mui/material'
-import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'

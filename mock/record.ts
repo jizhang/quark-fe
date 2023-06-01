@@ -30,7 +30,7 @@ function getRecordList() {
         amount: '1000',
         remark: '',
       },
-    ]
+    ],
   }
 }
 

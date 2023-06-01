@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -31,11 +31,11 @@ export default (props: Props) => {
   const open = Boolean(anchorEl)
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget)
   }
 
   function handleClose() {
-    setAnchorEl(null);
+    setAnchorEl(null)
   }
 
   const [filterDialogOpen, setFilterDialogOpen] = useState(false)

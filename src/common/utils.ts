@@ -1,4 +1,4 @@
-import { NavigateFunction } from "react-router-dom"
+import { NavigateFunction } from 'react-router-dom'
 
 export function formatAmount(amount: number | string) {
   return Number(amount).toLocaleString('en-US', {
@@ -7,6 +7,4 @@ export function formatAmount(amount: number | string) {
   })
 }
 
-export const navigateHolder = {
-  navigate: (() => {}) as NavigateFunction,
-}
+export const navigateHolder: { navigate?: NavigateFunction } = {}

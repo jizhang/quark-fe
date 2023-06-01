@@ -23,6 +23,6 @@ export async function getUserSetting(): Promise<UserSetting> {
   return get('/api/user/setting/get')
 }
 
-export async function saveUserSetting(form: UserSetting): Promise<{}> {
+export async function saveUserSetting(form: UserSetting): Promise<object> {
   return post('/api/user/setting/save', form)
 }

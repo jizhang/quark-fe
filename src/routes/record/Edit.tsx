@@ -21,7 +21,7 @@ import {
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
-import { useConfirm } from "material-ui-confirm";
+import { useConfirm } from 'material-ui-confirm'
 import _ from 'lodash'
 import dayjs, { Dayjs } from 'dayjs'
 import { useFormik } from 'formik'
@@ -107,7 +107,7 @@ export default () => {
       service.saveRecord(recordForm).then(() => {
         navigate('/record/list')
       })
-    }
+    },
   })
 
   function handleChangeRecordType(event: React.ChangeEvent<HTMLInputElement>) {
