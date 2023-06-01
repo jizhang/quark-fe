@@ -39,7 +39,7 @@ export default () => {
         enqueueSnackbar('Settings saved.', { variant: 'success' })
         navigate('/')
       })
-    }
+    },
   })
 
   useEffect(() => {

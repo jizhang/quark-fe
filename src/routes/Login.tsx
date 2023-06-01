@@ -45,7 +45,7 @@ export default () => {
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    event.preventDefault()
 
     login(form).then(() => {
       navigate('/')

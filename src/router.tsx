@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from 'react-router-dom'
 import { navigateHolder } from '@/common/utils'
 import Login from './routes/Login'
 import AccountList from './routes/account/List'
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/",
+    path: '/',
     element: <AccountList />,
   },
   {

@@ -16,7 +16,7 @@ import {
   RadioGroup,
   Radio,
 } from '@mui/material'
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import _ from 'lodash'
 import * as service from '@/services/account'
 

@@ -8,7 +8,7 @@ function getCategoryList() {
       { id: 3, name: 'Mobile', type: 1 },
       { id: 4, name: 'Salary', type: 2 },
       { id: 5, name: 'Investment', type: 2 },
-    ]
+    ],
   }
 }
 

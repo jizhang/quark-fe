@@ -1,5 +1,5 @@
 import { defineConfig, UserConfig } from 'vite'
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react'
 import { viteMockServe } from 'vite-plugin-mock'
 import { fileURLToPath, URL } from 'url'
 

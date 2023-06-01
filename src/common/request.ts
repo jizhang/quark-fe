@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import qs from 'qs'
-import { enqueueSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack'
 import { navigateHolder } from '@/common/utils'
 
 class RequestError {

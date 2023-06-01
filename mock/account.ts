@@ -27,7 +27,7 @@ function getAccount() {
       name: 'Cash',
       type: 1,
       initial_balance: 1234.56,
-    }
+    },
   }
 }
 
@@ -60,5 +60,5 @@ export default [
   {
     url: '/api/account/delete',
     response: deleteAccount,
-  }
+  },
 ] as MockMethod[]
