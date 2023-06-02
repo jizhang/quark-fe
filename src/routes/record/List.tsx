@@ -49,9 +49,11 @@ interface RecordGroup {
 
 function makeGroups(records: service.RecordItem[]) {
   const groups: RecordGroup[] = []
+
   _.forEach(records, record => {
     const month = dayjs(record.record_time).format('MMM YYYY')
     let group = _.find(groups, ['month', month])
+
     if (_.isUndefined(group)) {
       group = {
         month,
@@ -60,9 +62,14 @@ function makeGroups(records: service.RecordItem[]) {
       }
       groups.push(group)
     }
+
     group.records.push(record)
-    group.total += _.toNumber(record.amount)
+
+    if (record.record_type !== consts.RECORD_TYPE_TRANSFER) {
+      group.total += _.toNumber(record.amount)
+    }
   })
+
   return groups
 }
 
