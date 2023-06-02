@@ -4,11 +4,11 @@ function getRecordList() {
   return {
     data: [
       {
-        id: 1,
+        id: 3,
         record_type: 1,
         category_name: 'Mobile',
         account_name: 'Alipay',
-        record_time: '2023-05-05 08:17:00',
+        record_time: '2023-06-05 08:17:00',
         amount: '-10.9',
         remark: 'chess cracker scald free ink bang verse redundant young glistening',
       },
@@ -22,7 +22,7 @@ function getRecordList() {
         remark: 'Remark 2',
       },
       {
-        id: 3,
+        id: 1,
         record_type: 3,
         account_name: 'CMB',
         target_account_name: 'Alipay',

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   Box,
   Avatar,
   List,
+  ListSubheader,
   ListItem,
   ListItemButton,
   ListItemAvatar,
@@ -38,6 +39,31 @@ function parseFilterForm(params: URLSearchParams) {
   }
 
   return form
+}
+
+interface RecordGroup {
+  month: string
+  total: number
+  records: service.RecordItem[]
+}
+
+function makeGroups(records: service.RecordItem[]) {
+  const groups: RecordGroup[] = []
+  _.forEach(records, record => {
+    const month = dayjs(record.record_time).format('MMM YYYY')
+    let group = _.find(groups, ['month', month])
+    if (_.isUndefined(group)) {
+      group = {
+        month,
+        total: 0.0,
+        records: [],
+      }
+      groups.push(group)
+    }
+    group.records.push(record)
+    group.total += _.toNumber(record.amount)
+  })
+  return groups
 }
 
 export default () => {
@@ -85,20 +111,27 @@ export default () => {
     <Box>
       <Nav filterForm={filterForm} onChangeFilterForm={setFilterForm} />
       <List>
-        {data.map(item => (
-          <ListItem
-            key={item.id}
-            disablePadding
-          >
-            <ListItemButton
-              component={Link}
-              to={{ pathname: '/record/edit', search: `id=${item.id}` }}
-              alignItems="flex-start"
-            >
-              <ListItemAvatar><Avatar>{getIcon(item.record_type)}</Avatar></ListItemAvatar>
-              <ListItemText primary={getPrimaryText(item)} secondary={getSecondaryText(item)} />
-            </ListItemButton>
-          </ListItem>
+        {makeGroups(data).map(group => (
+          <React.Fragment key={group.month}>
+            <ListSubheader>
+              <TitleAmount title={group.month} amount={group.total} />
+            </ListSubheader>
+            {group.records.map(item => (
+              <ListItem
+                key={item.id}
+                disablePadding
+              >
+                <ListItemButton
+                  component={Link}
+                  to={{ pathname: '/record/edit', search: `id=${item.id}` }}
+                  alignItems="flex-start"
+                >
+                  <ListItemAvatar><Avatar>{getIcon(item.record_type)}</Avatar></ListItemAvatar>
+                  <ListItemText primary={getPrimaryText(item)} secondary={getSecondaryText(item)} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </React.Fragment>
         ))}
         {data.length == 0 && (
           <ListItem>
