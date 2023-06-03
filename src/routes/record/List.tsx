@@ -75,16 +75,20 @@ function makeGroups(records: service.RecordItem[]) {
 
 export default () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [filterForm, setFilterForm] = useState<service.FilterForm>(parseFilterForm(searchParams))
+  const filterForm = parseFilterForm(searchParams)
+
+  function handleChangeFilterForm(values: service.FilterForm) {
+    const newParams = _(values).pickBy().mapValues(_.toString).value()
+    setSearchParams(newParams)
+  }
+
   const [data, setData] = useState<service.RecordItem[]>([])
 
   useEffect(() => {
     service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
-
-    setSearchParams(_(filterForm).pickBy().mapValues(_.toString).value())
-  }, [filterForm])
+  }, [searchParams])
 
   function getIcon(recordType: number) {
     if (recordType === consts.RECORD_TYPE_EXPENSE) return <UploadIcon />
@@ -116,7 +120,7 @@ export default () => {
 
   return (
     <Box>
-      <Nav filterForm={filterForm} onChangeFilterForm={setFilterForm} />
+      <Nav filterForm={filterForm} onChangeFilterForm={handleChangeFilterForm} />
       <List>
         {makeGroups(data).map(group => (
           <React.Fragment key={group.month}>
