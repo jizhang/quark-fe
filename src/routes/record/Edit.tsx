@@ -34,6 +34,7 @@ import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
 
 function renderAccounts(accounts: accountService.Account[]) {
+  // TODO Extract to consts. Merge with account list page.
   const groups = [
     { id: 1, name: 'Assets' },
     { id: 2, name: 'Liabilities' },
