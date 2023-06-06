@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -19,16 +19,16 @@ import {
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
+import useQueryState, { type QueryState } from '@/common/use-query-state'
 import * as service from '@/services/record'
 import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
-function optInt(params: URLSearchParams, key: string) {
-  const value = params.get(key)
-  return value ? _.toInteger(value) : undefined
+function optInt(params: QueryState, key: string) {
+  return params[key] ? _.toInteger(params[key]) : undefined
 }
 
-function parseFilterForm(params: URLSearchParams) {
+function parseFilterForm(params: QueryState) {
   const form: service.FilterForm = {
     record_type: optInt(params, 'record_type'),
     account_id: optInt(params, 'account_id'),
@@ -74,12 +74,12 @@ function makeGroups(records: service.RecordItem[]) {
 }
 
 export default () => {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const filterForm = parseFilterForm(searchParams)
+  const [filterState, setFilterState] = useQueryState({})
+  const filterForm = parseFilterForm(filterState)
 
   function handleChangeFilterForm(values: service.FilterForm) {
     const newParams = _(values).pickBy().mapValues(_.toString).value()
-    setSearchParams(newParams)
+    setFilterState(newParams)
   }
 
   const [data, setData] = useState<service.RecordItem[]>([])
@@ -88,7 +88,7 @@ export default () => {
     service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
-  }, [searchParams])
+  }, [filterState])
 
   function getIcon(recordType: number) {
     if (recordType === consts.RECORD_TYPE_EXPENSE) return <UploadIcon />
