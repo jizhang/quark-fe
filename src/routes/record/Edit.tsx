@@ -18,6 +18,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  ListSubheader,
 } from '@mui/material'
 import { ArrowBackIos } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/x-date-pickers'
@@ -31,6 +32,35 @@ import * as userService from '@/services/user'
 import * as accountService from '@/services/account'
 import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
+
+interface AccountGroup {
+  id: number
+  name: string
+  accounts: accountService.Account[],
+}
+
+function renderAccounts(accounts: accountService.Account[]) {
+  const groups: AccountGroup[] = [
+    { id: 1, name: 'Assets', accounts: [] },
+    { id: 2, name: 'Liabilities', accounts: [] },
+  ]
+
+  _.forEach(accounts, account => {
+    const group = _.find(groups, ['id', account.type])
+    if (_.isUndefined(group)) return
+    group.accounts.push(account)
+  })
+
+  return groups.flatMap(group => {
+    if (group.accounts.length === 0) return []
+    return [
+      <ListSubheader key={`group-${group.id}`}>{group.name}</ListSubheader>,
+      ...group.accounts.map(account => (
+        <MenuItem key={account.id} value={account.id}>{account.name}</MenuItem>
+      )),
+    ]
+  })
+}
 
 export default () => {
   const navigate = useNavigate()
@@ -204,11 +234,7 @@ export default () => {
             value={form.values.account_id}
             label={form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}
             onChange={form.handleChange}
-          >
-            {accounts.map(item => (
-              <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-            ))}
-          </Select>
+          >{renderAccounts(accounts)}</Select>
           <FormHelperText>{form.touched.account_id && form.errors.account_id}</FormHelperText>
         </FormControl>
         {form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) && (
@@ -219,11 +245,7 @@ export default () => {
               value={form.values.target_account_id}
               label="Target Account"
               onChange={form.handleChange}
-            >
-              {accounts.map(item => (
-                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
+            >{renderAccounts(accounts)}</Select>
             <FormHelperText>{form.touched.target_account_id && form.errors.target_account_id}</FormHelperText>
           </FormControl>
         )}
