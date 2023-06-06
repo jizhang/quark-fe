@@ -33,32 +33,20 @@ import * as accountService from '@/services/account'
 import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
 
-interface AccountGroup {
-  id: number
-  name: string
-  accounts: accountService.Account[],
-}
-
 function renderAccounts(accounts: accountService.Account[]) {
-  const groups: AccountGroup[] = [
-    { id: 1, name: 'Assets', accounts: [] },
-    { id: 2, name: 'Liabilities', accounts: [] },
+  const groups = [
+    { id: 1, name: 'Assets' },
+    { id: 2, name: 'Liabilities' },
   ]
-
-  _.forEach(accounts, account => {
-    const group = _.find(groups, ['id', account.type])
-    if (_.isUndefined(group)) return
-    group.accounts.push(account)
-  })
-
+  
   return groups.flatMap(group => {
-    if (group.accounts.length === 0) return []
+    const groupAccounts = _.filter(accounts, ['type', group.id])
+    if (groupAccounts.length === 0) return []
     return [
       <ListSubheader key={`group-${group.id}`}>{group.name}</ListSubheader>,
-      ...group.accounts.map(account => (
+      ...groupAccounts.map(account => (
         <MenuItem key={account.id} value={account.id}>{account.name}</MenuItem>
       )),
-    ]
   })
 }
 
