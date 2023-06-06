@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -19,18 +19,16 @@ import {
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
+import useQueryState, { type QueryState } from '@/common/use-query-state'
 import * as service from '@/services/record'
 import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
-type State = Record<string, string>
-type SetState = (state: State) => void
-
-function optInt(params: State, key: string) {
+function optInt(params: QueryState, key: string) {
   return params[key] ? _.toInteger(params[key]) : undefined
 }
 
-function parseFilterForm(params: State) {
+function parseFilterForm(params: QueryState) {
   const form: service.FilterForm = {
     record_type: optInt(params, 'record_type'),
     account_id: optInt(params, 'account_id'),
@@ -41,24 +39,6 @@ function parseFilterForm(params: State) {
   }
 
   return form
-}
-
-function useQueryState(initialState: State): [State, SetState] {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const mergedState = {
-    ...initialState,
-    ...Object.fromEntries(searchParams),
-  }
-
-  const [state, setState] = useState(mergedState)
-
-  useEffect(() => {
-    if (!_.isEqual(state, mergedState)) {
-      setState(mergedState)
-    }
-  }, [searchParams])
-
-  return [state, setSearchParams]
 }
 
 interface RecordGroup {

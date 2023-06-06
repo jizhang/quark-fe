@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import {
   Box,
   AppBar,
@@ -13,22 +12,11 @@ import {
   MenuItem,
 } from '@mui/material'
 import dayjs from 'dayjs'
+import useQueryState from '@/common/use-query-state'
 import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
 import Category from '@/components/chart/Category'
 import Investment from '@/components/chart/Investment'
-
-type State = Record<string, string>
-type SetState = (state: State) => void
-
-function useQueryState(initialState: State): [State, SetState] {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const state: State = {
-    ...initialState,
-    ...Object.fromEntries(searchParams),
-  }
-  return [state, setSearchParams]
-}
 
 export default () => {
   const [minDate, setMinDate] = useState(dayjs())
