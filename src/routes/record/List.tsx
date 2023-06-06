@@ -45,18 +45,20 @@ function parseFilterForm(params: State) {
 
 function useQueryState(initialState: State): [State, SetState] {
   const [searchParams, setSearchParams] = useSearchParams()
-  const stateRef = useRef({})
-
-  const state = {
+  const mergedState = {
     ...initialState,
     ...Object.fromEntries(searchParams),
   }
 
-  if (!_.isEqual(stateRef.current, state)) {
-    stateRef.current = state
-  }
+  const [state, setState] = useState(mergedState)
 
-  return [stateRef.current, setSearchParams]
+  useEffect(() => {
+    if (!_.isEqual(state, mergedState)) {
+      setState(mergedState)
+    }
+  }, [searchParams])
+
+  return [state, setSearchParams]
 }
 
 interface RecordGroup {
