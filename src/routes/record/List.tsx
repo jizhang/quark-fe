@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   Box,
@@ -23,12 +23,14 @@ import * as service from '@/services/record'
 import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 
-function optInt(params: URLSearchParams, key: string) {
-  const value = params.get(key)
-  return value ? _.toInteger(value) : undefined
+type State = Record<string, string>
+type SetState = (state: State) => void
+
+function optInt(params: State, key: string) {
+  return params[key] ? _.toInteger(params[key]) : undefined
 }
 
-function parseFilterForm(params: URLSearchParams) {
+function parseFilterForm(params: State) {
   const form: service.FilterForm = {
     record_type: optInt(params, 'record_type'),
     account_id: optInt(params, 'account_id'),
@@ -39,6 +41,22 @@ function parseFilterForm(params: URLSearchParams) {
   }
 
   return form
+}
+
+function useQueryState(initialState: State): [State, SetState] {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const stateRef = useRef({})
+
+  const state = {
+    ...initialState,
+    ...Object.fromEntries(searchParams),
+  }
+
+  if (!_.isEqual(stateRef.current, state)) {
+    stateRef.current = state
+  }
+
+  return [stateRef.current, setSearchParams]
 }
 
 interface RecordGroup {
@@ -74,12 +92,12 @@ function makeGroups(records: service.RecordItem[]) {
 }
 
 export default () => {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const filterForm = parseFilterForm(searchParams)
+  const [filterState, setFilterState] = useQueryState({})
+  const filterForm = parseFilterForm(filterState)
 
   function handleChangeFilterForm(values: service.FilterForm) {
     const newParams = _(values).pickBy().mapValues(_.toString).value()
-    setSearchParams(newParams)
+    setFilterState(newParams)
   }
 
   const [data, setData] = useState<service.RecordItem[]>([])
@@ -88,7 +106,7 @@ export default () => {
     service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
-  }, [searchParams])
+  }, [filterState])
 
   function getIcon(recordType: number) {
     if (recordType === consts.RECORD_TYPE_EXPENSE) return <UploadIcon />

@@ -27,12 +27,7 @@ function useQueryState(initialState: State): [State, SetState] {
     ...initialState,
     ...Object.fromEntries(searchParams),
   }
-
-  function setState(newState: State) {
-    setSearchParams(newState)
-  }
-
-  return [state, setState]
+  return [state, setSearchParams]
 }
 
 export default () => {
