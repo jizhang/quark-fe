@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "start:local": "cross-env MOCK=none vite",
+    "start:proxy": "cross-env MOCK=none vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint --fix . && tsc --noEmit",
