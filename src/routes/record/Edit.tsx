@@ -34,13 +34,7 @@ import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
 
 function renderAccounts(accounts: accountService.Account[]) {
-  // TODO Extract to consts. Merge with account list page.
-  const groups = [
-    { id: 1, name: 'Assets' },
-    { id: 2, name: 'Liabilities' },
-  ]
-  
-  return groups.flatMap(group => {
+  return consts.ACCOUNT_GROUPS.flatMap(group => {
     const groupAccounts = _.filter(accounts, ['type', group.id])
     if (groupAccounts.length === 0) return []
     return [
@@ -48,6 +42,7 @@ function renderAccounts(accounts: accountService.Account[]) {
       ...groupAccounts.map(account => (
         <MenuItem key={account.id} value={account.id}>{account.name}</MenuItem>
       )),
+    ]
   })
 }
 

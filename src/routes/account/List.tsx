@@ -7,14 +7,12 @@ import {
   ListSubheader,
 } from '@mui/material'
 import _ from 'lodash'
+import * as consts from '@/common/consts'
 import * as service from '@/services/account'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
 import EditingItem from '@/components/account/EditingItem'
-
-const ACCOUNT_TYPE_ASSET = 1
-const ACCOUNT_TYPE_LIABILITY = 2
 
 interface AccountGroup {
   name: string
@@ -25,7 +23,7 @@ interface AccountGroup {
 function makeGroups(accounts: service.Account[]) {
   const groups: AccountGroup[] = []
 
-  const assets = _.filter(accounts, ['type', ACCOUNT_TYPE_ASSET])
+  const assets = _.filter(accounts, ['type', consts.ACCOUNT_TYPE_ASSET])
   if (assets.length > 0) {
     groups.push({
       name: 'Assets',
@@ -34,7 +32,7 @@ function makeGroups(accounts: service.Account[]) {
     })
   }
 
-  const liabilities = _.filter(accounts, ['type', ACCOUNT_TYPE_LIABILITY])
+  const liabilities = _.filter(accounts, ['type', consts.ACCOUNT_TYPE_LIABILITY])
   if (liabilities.length > 0) {
     groups.push({
       name: 'Liabilities',
