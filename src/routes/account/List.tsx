@@ -14,34 +14,16 @@ import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
 import EditingItem from '@/components/account/EditingItem'
 
-interface AccountGroup {
-  name: string
-  accounts: service.Account[]
-  total: number
-}
-
 function makeGroups(accounts: service.Account[]) {
-  const groups: AccountGroup[] = []
-
-  const assets = _.filter(accounts, ['type', consts.ACCOUNT_TYPE_ASSET])
-  if (assets.length > 0) {
-    groups.push({
-      name: 'Assets',
-      accounts: assets,
-      total: _(assets).map('balance').sum(),
-    })
-  }
-
-  const liabilities = _.filter(accounts, ['type', consts.ACCOUNT_TYPE_LIABILITY])
-  if (liabilities.length > 0) {
-    groups.push({
-      name: 'Liabilities',
-      accounts: liabilities,
-      total: _(liabilities).map('balance').sum(),
-    })
-  }
-
-  return groups
+  return consts.ACCOUNT_GROUPS.flatMap(group => {
+    const groupAccounts = _.filter(accounts, ['type', group.id])
+    if (groupAccounts.length === 0) return []
+    return [{
+      name: group.name,
+      accounts: groupAccounts,
+      total: _(groupAccounts).map('balance').sum(),
+    }]
+  })
 }
 
 export default () => {
