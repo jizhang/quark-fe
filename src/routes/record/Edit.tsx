@@ -29,17 +29,15 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import * as consts from '@/common/consts'
 import * as userService from '@/services/user'
-import * as accountService from '@/services/account'
 import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
+import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
 
-function renderAccounts(accounts: accountService.Account[]) {
-  return consts.ACCOUNT_GROUPS.flatMap(group => {
-    const groupAccounts = _.filter(accounts, ['type', group.id])
-    if (groupAccounts.length === 0) return []
+function renderAccounts(groups: AccountGroup[]) {
+  return groups.flatMap(group => {
     return [
       <ListSubheader key={`group-${group.id}`}>{group.name}</ListSubheader>,
-      ...groupAccounts.map(account => (
+      ...group.accounts.map(account => (
         <MenuItem key={account.id} value={account.id}>{account.name}</MenuItem>
       )),
     ]
@@ -141,13 +139,7 @@ export default () => {
     }, _.noop)
   }
 
-  const [accounts, setAccounts] = useState<accountService.Account[]>([])
-
-  useEffect(() => {
-    accountService.getAccountList().then(payload => {
-      setAccounts(payload.data)
-    })
-  }, [])
+  const { accountGroups } = useAccounts()
 
   const [categories, setCategories] = useState<categoryService.Category[]>([])
 
@@ -218,7 +210,7 @@ export default () => {
             value={form.values.account_id}
             label={form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}
             onChange={form.handleChange}
-          >{renderAccounts(accounts)}</Select>
+          >{renderAccounts(accountGroups)}</Select>
           <FormHelperText>{form.touched.account_id && form.errors.account_id}</FormHelperText>
         </FormControl>
         {form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) && (
@@ -229,7 +221,7 @@ export default () => {
               value={form.values.target_account_id}
               label="Target Account"
               onChange={form.handleChange}
-            >{renderAccounts(accounts)}</Select>
+            >{renderAccounts(accountGroups)}</Select>
             <FormHelperText>{form.touched.target_account_id && form.errors.target_account_id}</FormHelperText>
           </FormControl>
         )}

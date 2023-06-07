@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   List,
@@ -7,42 +7,17 @@ import {
   ListSubheader,
 } from '@mui/material'
 import _ from 'lodash'
-import * as consts from '@/common/consts'
-import * as service from '@/services/account'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
 import EditingItem from '@/components/account/EditingItem'
-
-function makeGroups(accounts: service.Account[]) {
-  return consts.ACCOUNT_GROUPS.flatMap(group => {
-    const groupAccounts = _.filter(accounts, ['type', group.id])
-    if (groupAccounts.length === 0) return []
-    return [{
-      name: group.name,
-      accounts: groupAccounts,
-      total: _(groupAccounts).map('balance').sum(),
-    }]
-  })
-}
+import useAccounts from '@/components/account/use-accounts'
 
 export default () => {
-  const [accounts, setAccounts] = useState<service.Account[]>([])
-
-  useEffect(() => { // TODO Loading
-    service.getAccountList().then(payload => {
-      setAccounts(payload.data)
-    })
-  }, [])
-
-  const groups = makeGroups(accounts)
-  const netCapital = _(groups).flatMap('accounts').map('balance').sum()
+  const { accountGroups, deleteAccount } = useAccounts()
+  const netCapital = _(accountGroups).map('total').sum()
 
   const [editing, setEditing] = useState(false)
-
-  function handleDelete(id: number) {
-    setAccounts(_.reject(accounts, ['id', id]))
-  }
 
   return (
     <Box>
@@ -53,8 +28,8 @@ export default () => {
             <TitleAmount title="Net capital" amount={netCapital} />
           </ListItemText>
         </ListItem>
-        {groups.map(group => (
-          <React.Fragment key={group.name}>
+        {accountGroups.map(group => (
+          <React.Fragment key={group.id}>
             <ListSubheader>
               {editing ? group.name : (
                 <TitleAmount title={group.name} amount={group.total} />
@@ -63,7 +38,7 @@ export default () => {
             {group.accounts.map(item => (
               <React.Fragment key={item.id}>
                 {editing ? (
-                  <EditingItem account={item} onDelete={handleDelete} />
+                  <EditingItem account={item} onDelete={deleteAccount} />
                 ) : (
                   <LinkItem account={item} />
                 )}
