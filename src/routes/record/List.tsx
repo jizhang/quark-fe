@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Box,
@@ -75,7 +75,7 @@ function makeGroups(records: service.RecordItem[]) {
 
 export default () => {
   const [filterState, setFilterState] = useQueryState({})
-  const filterForm = parseFilterForm(filterState)
+  const filterForm = useMemo(() => parseFilterForm(filterState), [filterState])
 
   function handleChangeFilterForm(values: service.FilterForm) {
     const newParams = _(values).pickBy().mapValues(_.toString).value()
@@ -88,7 +88,7 @@ export default () => {
     service.getRecordList(filterForm).then(payload => {
       setData(payload.data)
     })
-  }, [filterState])
+  }, [filterForm])
 
   function getIcon(recordType: number) {
     if (recordType === consts.RECORD_TYPE_EXPENSE) return <UploadIcon />

@@ -24,14 +24,18 @@ import * as userService from '@/services/user'
 
 export default () => {
   const navigate = useNavigate()
+  const [initialValues, setInitialValues] = useState({
+    default_account_id: '',
+  })
 
   const formik = useFormik({
-    initialValues: {
-      default_account_id: '',
-    },
+    enableReinitialize: true,
+    initialValues,
+
     validationSchema: yup.object({
       default_account_id: yup.number().required('Required'),
     }),
+
     onSubmit: values => {
       userService.saveUserSetting({
         default_account_id: _.toInteger(values.default_account_id),
@@ -44,7 +48,7 @@ export default () => {
 
   useEffect(() => {
     userService.getUserSetting().then(payload => {
-      formik.setValues({
+      setInitialValues({
         default_account_id: payload.default_account_id ? String(payload.default_account_id) : '',
       })
     })
