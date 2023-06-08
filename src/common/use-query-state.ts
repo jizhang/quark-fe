@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import _ from 'lodash'
 
 export type QueryState = Record<string, string>
 export type SetQueryState = (newState: QueryState) => void
 
 export default (initialState: QueryState): [QueryState, SetQueryState] => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const mergedState = {
+
+  const [state, setState] = useState({
     ...initialState,
     ...Object.fromEntries(searchParams),
-  }
-
-  const [state, setState] = useState(mergedState)
+  })
 
   useEffect(() => {
-    setState(mergedState)
-  }, [searchParams])
+    const mergedState = {
+      ...initialState,
+      ...Object.fromEntries(searchParams),
+    }
+    setState(prevState => _.isEqual(prevState, mergedState) ? prevState : mergedState)
+  }, [initialState, searchParams])
 
   return [state, setSearchParams]
 }
