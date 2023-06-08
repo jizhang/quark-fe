@@ -50,10 +50,21 @@ export default () => {
   const [searchParams] = useSearchParams()
   const recordId = searchParams.get('id')
 
+  const [initialValues, setInitialValues] = useState({
+    id: '',
+    record_type: String(consts.RECORD_TYPE_EXPENSE),
+    category_id: '',
+    account_id: '',
+    target_account_id: '',
+    record_time: dayjs() as Dayjs | null,
+    amount: '',
+    remark: '',
+  })
+
   useEffect(() => {
     if (recordId) {
       service.getRecord(_.toInteger(recordId)).then(payload => {
-        form.setValues({
+        setInitialValues({
           id: String(payload.id),
           record_type: String(payload.record_type),
           category_id: payload.category_id ? String(payload.category_id) : '',
@@ -64,20 +75,23 @@ export default () => {
           remark: String(payload.remark),
         })
       })
+    } else {
+      userService.getUserSetting().then(payload => {
+        if (payload.default_account_id) {
+          setInitialValues(initialValues => {
+            return {
+              ...initialValues,
+              account_id: String(payload.default_account_id),
+            }
+          })
+        }
+      })
     }
   }, [recordId])
 
   const form = useFormik({
-    initialValues: {
-      id: '',
-      record_type: String(consts.RECORD_TYPE_EXPENSE),
-      category_id: '',
-      account_id: '',
-      target_account_id: '',
-      record_time: dayjs() as Dayjs | null,
-      amount: '',
-      remark: '',
-    },
+    enableReinitialize: true,
+    initialValues,
 
     validationSchema: yup.object({
       record_type: yup.number().required('Record type cannot be empty.'),
@@ -148,16 +162,6 @@ export default () => {
       setCategories(payload.data)
     })
   }, [])
-
-  useEffect(() => {
-    if (!recordId) {
-      userService.getUserSetting().then(payload => {
-        if (payload.default_account_id) {
-          form.setFieldValue('account_id', String(payload.default_account_id))
-        }
-      })
-    }
-  }, [recordId])
 
   return (
     <Box>
