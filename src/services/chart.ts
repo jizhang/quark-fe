@@ -33,3 +33,13 @@ export interface InvestmentChart {
 export async function getInvestmentChart(month: string): Promise<InvestmentChart> {
   return get('/api/chart/investment', { month })
 }
+
+export interface NetCapitalChartItem {
+  month: string
+  amount: string
+}
+
+export async function getNetCapitalChart(year: string): Promise<NetCapitalChartItem[]> {
+  const payload = await get('/api/chart/net-capital', { year })
+  return payload.data
+}
