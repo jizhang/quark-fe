@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import dayjs from 'dayjs'
 import { MockMethod } from 'vite-plugin-mock'
 
 function getMinDate() {
@@ -49,6 +50,26 @@ function getInvestmentChart() {
   }
 }
 
+function getNetCapitalChart() {
+  let current = dayjs().startOf('month').subtract(11, 'month')
+  const end = dayjs().endOf('month')
+
+  const data = [] as {
+    month: string
+    amount: string
+  }[]
+
+  while (current.isBefore(end)) {
+    data.push({
+      month: current.format('YYYYMM'),
+      amount: String(_.round(_.random(100_0000, 200_0000, true), 2)),
+    })
+    current = current.add(1, 'month')
+  }
+
+  return { data }
+}
+
 export default [
   {
     url: '/api/chart/min-date',
@@ -61,5 +82,9 @@ export default [
   {
     url: '/api/chart/investment',
     response: getInvestmentChart,
+  },
+  {
+    url: '/api/chart/net-capital',
+    response: getNetCapitalChart,
   },
 ] as MockMethod[]
