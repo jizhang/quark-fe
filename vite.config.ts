@@ -1,4 +1,4 @@
-import { defineConfig, UserConfig } from 'vite'
+import { defineConfig, UserConfig, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { viteMockServe } from 'vite-plugin-mock'
 import { fileURLToPath, URL } from 'url'
@@ -15,6 +15,7 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       react(),
+      // splitVendorChunkPlugin(),
       viteMockServe({
         localEnabled: mockEnabled,
         prodEnabled: false,
