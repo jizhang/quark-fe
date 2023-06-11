@@ -1,7 +1,8 @@
+import { fileURLToPath, URL } from 'url'
 import { defineConfig, UserConfig, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { viteMockServe } from 'vite-plugin-mock'
-import { fileURLToPath, URL } from 'url'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -15,11 +16,11 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       react(),
-      // splitVendorChunkPlugin(),
       viteMockServe({
         localEnabled: mockEnabled,
         prodEnabled: false,
       }),
+      splitVendorChunkPlugin(),
     ],
   }
 
@@ -31,6 +32,10 @@ export default defineConfig(({ command }) => {
         },
       },
     }
+  }
+
+  if (process.env.ANALYZE === '1') {
+    config.plugins.push(visualizer())
   }
 
   return config
