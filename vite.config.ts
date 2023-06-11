@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'url'
-import { defineConfig, UserConfig, splitVendorChunkPlugin } from 'vite'
+import { defineConfig, UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { viteMockServe } from 'vite-plugin-mock'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -20,8 +20,18 @@ export default defineConfig(({ command }) => {
         localEnabled: mockEnabled,
         prodEnabled: false,
       }),
-      splitVendorChunkPlugin(),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom', 'react-router-dom'],
+            mui: ['@mui/material', '@mui/icons-material', '@mui/x-date-pickers'],
+            recharts: ['recharts'],
+          },
+        },
+      },
+    },
   }
 
   if (!mockEnabled) {
