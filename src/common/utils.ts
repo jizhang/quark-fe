@@ -11,8 +11,9 @@ export function formatAmount(amount: number | string) {
 }
 
 export function formatAmountTick(value: any) {
-  if (value >= 1000_000_000) return _.round(value / 1000_000_000, 1) + 'b'
-  if (value >= 1000_000) return _.round(value / 1000_000, 1) + 'm'
-  if (value >= 1000) return _.round(value / 1000, 1) + 'k'
+  const absValue = Math.abs(value)
+  if (absValue >= 1000_000_000) return _.round(value / 1000_000_000, 1) + 'b'
+  if (absValue >= 1000_000) return _.round(value / 1000_000, 1) + 'm'
+  if (absValue >= 1000) return _.round(value / 1000, 1) + 'k'
   return value
 }
