@@ -43,3 +43,16 @@ export async function getNetCapitalChart(year: string): Promise<NetCapitalChartI
   const payload = await get('/api/chart/net-capital', { year })
   return payload.data
 }
+
+export interface ExpenseIncomeChartItem {
+  month: string
+  record_type: number
+  category_id: number
+  category_name: string
+  amount: string
+}
+
+export async function getExpenseIncomeChart(year: string): Promise<ExpenseIncomeChartItem[]> {
+  const payload = await get('/api/chart/expense-income', { year })
+  return payload.data
+}
