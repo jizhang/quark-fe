@@ -3,6 +3,7 @@ import { Stack } from '@mui/material'
 import { BarChart, Bar, XAxis, YAxis, Legend, Tooltip, ResponsiveContainer } from 'recharts'
 import _ from 'lodash'
 import dayjs from 'dayjs'
+import * as consts from '@/common/consts'
 import { formatAmount, formatAmountTick } from '@/common/utils'
 import * as chartService from '@/services/chart'
 import ExpenseIncomeChart from './ExpenseIncomeChart'
@@ -28,7 +29,7 @@ export default (props: Props) => {
         <BarChart data={data}>
           <XAxis dataKey="month" tickFormatter={value => formatMonth(value, 'MMM')} />
           <YAxis tickFormatter={formatAmountTick} width={45} />
-          <Bar dataKey="amount" fill="#757de8" name="Net capital" />
+          <Bar dataKey="amount" fill={consts.COLORS10[0]} name="Net capital" />
           <Legend />
           <Tooltip
             formatter={value => formatAmount(_.toNumber(value))}
