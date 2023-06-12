@@ -70,6 +70,50 @@ function getNetCapitalChart() {
   return { data }
 }
 
+function makeCategoryTrendChart(categories: { id: number }[]) {
+  const data = [] as {
+    month: string
+    [key: string]: string
+  }[]
+
+  let current = dayjs().startOf('month').subtract(11, 'month')
+  const end = dayjs().endOf('month')
+
+  while (current.isBefore(end)) {
+    const item = {
+      month: current.format('YYYYMM'),
+    }
+
+    _.forEach(categories, category => {
+      item[`category_${category.id}`] = String(_.round(_.random(1000, 2000, true), 2))
+    })
+
+    data.push(item)
+    current = current.add(1, 'month')
+  }
+
+  return data
+}
+
+function getExpenseChart() {
+  const categories = [
+    { id: 1, name: 'Food' },
+    { id: 2, name: 'Drink' },
+    { id: 3, name: 'Clothes' },
+  ]
+  const data = makeCategoryTrendChart(categories)
+  return { categories, data }
+}
+
+function getIncomeChart() {
+  const categories = [
+    { id: 4, name: 'Salary' },
+    { id: 5, name: 'Investment' },
+  ]
+  const data = makeCategoryTrendChart(categories)
+  return { categories, data }
+}
+
 export default [
   {
     url: '/api/chart/min-date',
@@ -86,5 +130,13 @@ export default [
   {
     url: '/api/chart/net-capital',
     response: getNetCapitalChart,
+  },
+  {
+    url: '/api/chart/expense',
+    response: getExpenseChart,
+  },
+  {
+    url: '/api/chart/income',
+    response: getIncomeChart,
   },
 ] as MockMethod[]
