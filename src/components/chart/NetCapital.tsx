@@ -23,6 +23,15 @@ export default (props: Props) => {
     chartService.getNetCapitalChart(props.year).then(setData)
   }, [props.year])
 
+  const emptyPayload = () => ({ categories: [], data: [] })
+  const [expense, setExpense] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
+  const [income, setIncome] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
+
+  useEffect(() => {
+    chartService.getExpenseChart(props.year).then(setExpense)
+    chartService.getIncomeChart(props.year).then(setIncome)
+  }, [props.year])
+
   return (
     <Stack px={2} py={3} spacing={3}>
       <ResponsiveContainer width="100%" height={240}>
@@ -38,7 +47,8 @@ export default (props: Props) => {
         </BarChart>
       </ResponsiveContainer>
 
-      <ExpenseIncomeChart year={props.year} />
+      <ExpenseIncomeChart {...expense} />
+      <ExpenseIncomeChart {...income} />
     </Stack>
   )
 }
