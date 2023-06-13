@@ -1,4 +1,13 @@
-import { BarChart, Bar, XAxis, YAxis, Legend, Tooltip, ResponsiveContainer } from 'recharts'
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Legend,
+  Tooltip,
+  ReferenceLine,
+} from 'recharts'
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
@@ -12,11 +21,21 @@ function formatMonth(value: any, format: string) {
 type Props = chartService.ExpenseIncomeChartResponse
 
 export default (props: Props) => {
+  const hasNegative = _(props.data)
+    .flatMap(item => {
+      return _.map(props.categories, category => {
+        return _.toNumber(item[`category_${category.id}`])
+      })
+    })
+    .filter(amount => amount < 0)
+    .some()
+
   return (
     <ResponsiveContainer width="100%" height={240}>
-      <BarChart data={props.data}>
+      <BarChart data={props.data} stackOffset="sign">
         <XAxis dataKey="month" tickFormatter={value => formatMonth(value, 'MMM')} />
         <YAxis tickFormatter={formatAmountTick} width={45} />
+        {hasNegative && <ReferenceLine y={0} />}
         {props.categories.map((category, i) => (
           <Bar
             key={category.id}
