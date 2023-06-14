@@ -1,5 +1,6 @@
 import { NavigateFunction } from 'react-router-dom'
 import _ from 'lodash'
+import dayjs from 'dayjs'
 
 export const navigateHolder: { navigate?: NavigateFunction } = {}
 
@@ -16,4 +17,8 @@ export function formatAmountTick(value: any) {
   if (absValue >= 1000_000) return _.round(value / 1000_000, 1) + 'm'
   if (absValue >= 1000) return _.round(value / 1000, 1) + 'k'
   return value
+}
+
+export function formatMonth(value: any, format: string) {
+  return dayjs(String(value), 'YYYYMM').format(format)
 }

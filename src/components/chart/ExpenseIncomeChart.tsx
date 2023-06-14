@@ -9,14 +9,9 @@ import {
   ReferenceLine,
 } from 'recharts'
 import _ from 'lodash'
-import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
-import { formatAmount, formatAmountTick } from '@/common/utils'
+import { formatAmount, formatAmountTick, formatMonth } from '@/common/utils'
 import * as chartService from '@/services/chart'
-
-function formatMonth(value: any, format: string) {
-  return dayjs(String(value), 'YYYYMM').format(format)
-}
 
 type Props = chartService.ExpenseIncomeChartResponse
 
