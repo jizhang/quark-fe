@@ -70,7 +70,7 @@ function getNetCapitalChart() {
   return { data }
 }
 
-function makeCategoryTrendChart(categories: { id: number }[]) {
+function makeCategoryTrendChart(categories: { id: number }[], allowNegative = false) {
   const data = [] as {
     month: string
     [key: string]: string
@@ -85,7 +85,8 @@ function makeCategoryTrendChart(categories: { id: number }[]) {
     }
 
     _.forEach(categories, category => {
-      item[`category_${category.id}`] = String(_.round(_.random(1000, 2000, true), 2))
+      const value = allowNegative ? _.random(-1000, 1000, true) : _.random(1000, 2000, true)
+      item[`category_${category.id}`] = String(_.round(value, 2))
     })
 
     data.push(item)
@@ -110,7 +111,7 @@ function getIncomeChart() {
     { id: 4, name: 'Salary' },
     { id: 5, name: 'Investment' },
   ]
-  const data = makeCategoryTrendChart(categories)
+  const data = makeCategoryTrendChart(categories, true)
   return { categories, data }
 }
 

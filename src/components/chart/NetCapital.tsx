@@ -38,12 +38,13 @@ export default (props: Props) => {
         <BarChart data={data}>
           <XAxis dataKey="month" tickFormatter={value => formatMonth(value, 'MMM')} />
           <YAxis tickFormatter={formatAmountTick} width={45} />
-          <Bar dataKey="amount" fill={consts.COLORS10[0]} name="Net capital" />
-          <Legend />
           <Tooltip
+            trigger="click"
             formatter={value => formatAmount(_.toNumber(value))}
             labelFormatter={value => formatMonth(value, 'MMM YYYY')}
           />
+          <Legend />
+          <Bar dataKey="amount" fill={consts.COLORS10[0]} name="Net capital" />
         </BarChart>
       </ResponsiveContainer>
 
