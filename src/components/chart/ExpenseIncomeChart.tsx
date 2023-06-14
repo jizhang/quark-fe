@@ -47,6 +47,7 @@ export default (props: Props) => {
         ))}
         <Legend />
         <Tooltip
+          trigger="click"
           formatter={value => formatAmount(_.toNumber(value))}
           labelFormatter={value => formatMonth(value, 'MMM YYYY')}
         />

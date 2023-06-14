@@ -41,6 +41,7 @@ export default (props: Props) => {
           <Bar dataKey="amount" fill={consts.COLORS10[0]} name="Net capital" />
           <Legend />
           <Tooltip
+            trigger="click"
             formatter={value => formatAmount(_.toNumber(value))}
             labelFormatter={value => formatMonth(value, 'MMM YYYY')}
           />
