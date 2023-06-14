@@ -36,6 +36,12 @@ export default (props: Props) => {
         <XAxis dataKey="month" tickFormatter={value => formatMonth(value, 'MMM')} />
         <YAxis tickFormatter={formatAmountTick} width={45} />
         {hasNegative && <ReferenceLine y={0} />}
+        <Tooltip
+          trigger="click"
+          formatter={value => formatAmount(_.toNumber(value))}
+          labelFormatter={value => formatMonth(value, 'MMM YYYY')}
+        />
+        <Legend />
         {props.categories.map((category, i) => (
           <Bar
             key={category.id}
@@ -45,12 +51,6 @@ export default (props: Props) => {
             stackId="amount"
           />
         ))}
-        <Legend />
-        <Tooltip
-          trigger="click"
-          formatter={value => formatAmount(_.toNumber(value))}
-          labelFormatter={value => formatMonth(value, 'MMM YYYY')}
-        />
       </BarChart>
     </ResponsiveContainer>
   )
