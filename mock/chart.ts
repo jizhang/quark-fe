@@ -115,6 +115,16 @@ function getIncomeChart() {
   return { categories, data }
 }
 
+function getInvestmentTrend() {
+  const categories = [
+    { id: 7, name: 'Alipay' },
+    { id: 8, name: 'Snowball' },
+    { id: 9, name: 'Stock' },
+  ]
+  const data = makeCategoryTrendChart(categories, true)
+  return { categories, data }
+}
+
 export default [
   {
     url: '/api/chart/min-date',
@@ -139,5 +149,9 @@ export default [
   {
     url: '/api/chart/income',
     response: getIncomeChart,
+  },
+  {
+    url: '/api/chart/investment-trend',
+    response: getInvestmentTrend,
   },
 ] as MockMethod[]

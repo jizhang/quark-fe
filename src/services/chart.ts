@@ -62,3 +62,7 @@ export async function getExpenseChart(year: string): Promise<ExpenseIncomeChartR
 export async function getIncomeChart(year: string): Promise<ExpenseIncomeChartResponse> {
   return get('/api/chart/income', { year })
 }
+
+export async function getInvestmentTrend(year: string): Promise<ExpenseIncomeChartResponse> {
+  return get('/api/chart/investment-trend', { year })
+}

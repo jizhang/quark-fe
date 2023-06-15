@@ -13,6 +13,7 @@ export default (props: Props) => {
   const [netCapital, setNetCapital] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
   const [expense, setExpense] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
   const [income, setIncome] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
+  const [investment, setInvestment] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
 
   useEffect(() => {
     chartService.getNetCapitalChart(props.year).then(data => {
@@ -32,12 +33,14 @@ export default (props: Props) => {
 
     chartService.getExpenseChart(props.year).then(setExpense)
     chartService.getIncomeChart(props.year).then(setIncome)
+    chartService.getInvestmentTrend(props.year).then(setInvestment)
   }, [props.year])
 
   const charts = [
     { name: 'Net capital', props: netCapital },
     { name: 'Expense', props: expense },
     { name: 'Income', props: income },
+    { name: 'Investment', props: investment },
   ]
 
   return (
