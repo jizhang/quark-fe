@@ -18,12 +18,12 @@ import * as chartService from '@/services/chart'
 import SideMenu from '@/components/SideMenu'
 import Category from '@/components/chart/Category'
 import Investment from '@/components/chart/Investment'
-import NetCapital from '@/components/chart/NetCapital'
+import Trend from '@/components/chart/Trend'
 
 const charts = [
   { type: 'category', name: 'Category', selector: 'month' },
   { type: 'investment', name: 'Investment', selector: 'month' },
-  { type: 'net-capital', name: 'Net capital', selector: 'year' },
+  { type: 'trend', name: 'Trend', selector: 'year' },
 ]
 
 function getMonths(minDate: dayjs.Dayjs) {
@@ -153,8 +153,8 @@ export default () => {
         <Investment month={form.month} />
       )}
 
-      {form.type === 'net-capital' && (
-        <NetCapital year={form.year} />
+      {form.type === 'trend' && (
+        <Trend year={form.year} />
       )}
     </Box>
   )
