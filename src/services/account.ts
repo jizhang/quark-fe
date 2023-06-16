@@ -3,6 +3,7 @@ import { get, post } from '@/common/request'
 export interface Account {
   id: number
   name: string
+  is_hidden: boolean
   type: number
   initial_balance: number,
   balance: number
