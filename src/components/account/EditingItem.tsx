@@ -44,16 +44,18 @@ export default (props: Props) => {
     alert('Not implemented yet.')
   }
 
+  const iconSx = { p: 0, ml: 2 }
+
   return (
     <ListItem key={account.id}>
       <ListItemIcon onClick={handleDragDrop}>
         <DragHandle />
       </ListItemIcon>
       <ListItemText>{account.name}</ListItemText>
-      <IconButton onClick={handleEdit}>
+      <IconButton onClick={handleEdit} sx={iconSx}>
         <EditIcon />
       </IconButton>
-      <IconButton onClick={handleDelete}>
+      <IconButton onClick={handleDelete} sx={iconSx}>
         <DeleteIcon />
       </IconButton>
     </ListItem>
