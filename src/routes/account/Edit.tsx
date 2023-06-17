@@ -15,6 +15,7 @@ import {
   FormHelperText,
   RadioGroup,
   Radio,
+  Switch,
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import _ from 'lodash'
@@ -32,6 +33,7 @@ export default () => {
         setForm({
           id: String(account.id),
           name: account.name,
+          is_hidden: account.is_hidden,
           type: String(account.type),
           initial_balance: String(account.initial_balance),
         })
@@ -42,6 +44,7 @@ export default () => {
   const [form, setForm] = useState({
     id: '',
     name: '',
+    is_hidden: false,
     type: '1',
     initial_balance: '0',
   })
@@ -58,6 +61,14 @@ export default () => {
       name: event.target.value,
     })
   }
+
+  function handleChangeHidden(event: React.ChangeEvent<HTMLInputElement>) {
+    setForm({
+      ...form,
+      is_hidden: event.target.checked,
+    })
+  }
+
 
   function handleChangeType(event: React.ChangeEvent<HTMLInputElement>) {
     setForm({
@@ -130,6 +141,12 @@ export default () => {
           error={!!errors.name}
           helperText={errors.name}
         ></TextField>
+        <FormControl>
+          <FormControlLabel
+            label="Hidden"
+            control={<Switch checked={form.is_hidden} onChange={handleChangeHidden} />}
+          />
+        </FormControl>
         <FormControl error={!!errors.type} disabled={!!form.id}>
           <FormLabel>Type</FormLabel>
           <RadioGroup row value={form.type} onChange={handleChangeType}>
