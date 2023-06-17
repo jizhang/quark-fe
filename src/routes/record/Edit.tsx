@@ -38,7 +38,11 @@ function renderAccounts(groups: AccountGroup[]) {
     return [
       <ListSubheader key={`group-${group.id}`}>{group.name}</ListSubheader>,
       ...group.accounts.map(account => (
-        <MenuItem key={account.id} value={account.id}>{account.name}</MenuItem>
+        <MenuItem
+          key={account.id}
+          value={account.id}
+          disabled={account.is_hidden}
+        >{account.name}</MenuItem>
       )),
     ]
   })
