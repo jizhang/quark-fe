@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
@@ -19,6 +19,9 @@ import {
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import _ from 'lodash'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import * as consts from '@/common/consts'
 import * as service from '@/services/account'
 
 export default () => {
@@ -28,9 +31,8 @@ export default () => {
 
   useEffect(() => {
     if (accountId) {
-      service.getAccount(_.toNumber(accountId)).then(payload => {
-        const { account } = payload
-        setForm({
+      service.getAccount(_.toNumber(accountId)).then(account => {
+        setInitialValues({
           id: String(account.id),
           name: account.name,
           is_hidden: account.is_hidden,
@@ -41,79 +43,34 @@ export default () => {
     }
   }, [accountId])
 
-  const [form, setForm] = useState({
+  const [initialValues, setInitialValues] = useState({
     id: '',
     name: '',
     is_hidden: false,
-    type: '1',
+    type: String(consts.ACCOUNT_TYPE_ASSET),
     initial_balance: '0',
   })
 
-  const [errors, setErrors] = useState({
-    name: '',
-    type: '',
-    initial_balance: '',
+  const form = useFormik({
+    enableReinitialize: true,
+    initialValues,
+
+    validationSchema: yup.object({
+      name: yup.string().required('Account name cannot be empty.'),
+      type: yup.number()
+        .required()
+        .oneOf([consts.ACCOUNT_TYPE_ASSET, consts.ACCOUNT_TYPE_LIABILITY], 'Invalid account type'),
+      initial_balance: yup.number()
+        .required('Initial balance cannot be empty.')
+        .typeError('Invalid number format'),
+    }),
+
+    onSubmit: (values) => {
+      service.saveAccount(values).then(() => {
+        navigate('/')
+      })
+    },
   })
-
-  function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      name: event.target.value,
-    })
-  }
-
-  function handleChangeHidden(event: React.ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      is_hidden: event.target.checked,
-    })
-  }
-
-
-  function handleChangeType(event: React.ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      type: event.target.value,
-    })
-  }
-
-  function handleChangeInitialBalance(event: React.ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      initial_balance: event.target.value,
-    })
-  }
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const errors = {
-      name: '',
-      type: '',
-      initial_balance: '',
-    }
-
-    if (!form.name) {
-      errors.name = 'Account name cannot be empty.'
-    }
-
-    if (!_.includes(['1', '2'], form.type)) {
-      errors.type = 'Invalid account type'
-    }
-
-    if (!form.initial_balance) {
-      errors.initial_balance = 'Initial balance cannot be empty.'
-    } else if (!_.isFinite(_.toNumber(form.initial_balance))) {
-      errors.initial_balance = 'Invalid number format'
-    }
-
-    setErrors(errors)
-    if (_(errors).values().some()) return
-
-    service.saveAccount(form).then(() => {
-      navigate('/')
-    })
-  }
 
   return (
     <Box>
@@ -129,39 +86,55 @@ export default () => {
           >
             <ArrowBackIosIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>{form.id ? 'Edit' : 'Add'} Account</Typography>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>{form.values.id ? 'Edit' : 'Add'} Account</Typography>
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Stack px={2} py={3} spacing={2} component="form" onSubmit={handleSubmit}>
+      <Stack px={2} py={3} spacing={2} component="form" onSubmit={form.handleSubmit}>
         <TextField
           label="Name"
-          value={form.name}
-          onChange={handleChangeName}
-          error={!!errors.name}
-          helperText={errors.name}
+          name="name"
+          value={form.values.name}
+          onChange={form.handleChange}
+          error={form.touched.name && !!form.errors.name}
+          helperText={form.touched.name && form.errors.name}
         ></TextField>
         <FormControl>
           <FormControlLabel
             label="Hidden"
-            control={<Switch checked={form.is_hidden} onChange={handleChangeHidden} />}
+            control={
+              <Switch
+                name="is_hidden"
+                checked={form.values.is_hidden}
+                onChange={form.handleChange}
+              />
+            }
           />
         </FormControl>
-        <FormControl error={!!errors.type} disabled={!!form.id}>
+        <FormControl
+          error={form.touched.type && !!form.errors.type}
+          disabled={!!form.values.id}
+        >
           <FormLabel>Type</FormLabel>
-          <RadioGroup row value={form.type} onChange={handleChangeType}>
+          <RadioGroup
+            row
+            name="type"
+            value={form.values.type}
+            onChange={form.handleChange}
+          >
             <FormControlLabel value="1" control={<Radio />} label="Asset" />
             <FormControlLabel value="2" control={<Radio />} label="Liability" />
           </RadioGroup>
-          <FormHelperText>{errors.type}</FormHelperText>
+          <FormHelperText>{form.touched.type && form.errors.type}</FormHelperText>
         </FormControl>
         <TextField
           label="Initial Balance"
-          value={form.initial_balance}
-          onChange={handleChangeInitialBalance}
-          error={!!errors.initial_balance}
-          helperText={errors.initial_balance}
-          disabled={!!form.id}
+          name="initial_balance"
+          value={form.values.initial_balance}
+          onChange={form.handleChange}
+          error={form.touched.initial_balance && !!form.errors.initial_balance}
+          helperText={form.touched.initial_balance && form.errors.initial_balance}
+          disabled={!!form.values.id}
         ></TextField>
         <Button variant="contained" type="submit">Save</Button>
       </Stack>
