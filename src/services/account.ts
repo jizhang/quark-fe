@@ -5,8 +5,8 @@ export interface Account {
   name: string
   is_hidden: boolean
   type: number
-  initial_balance: number,
-  balance: number
+  initial_balance: string,
+  balance: string,
 }
 
 interface AccountListResponse {
