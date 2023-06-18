@@ -1,14 +1,18 @@
 import _ from 'lodash'
 import { MockMethod } from 'vite-plugin-mock'
 
+function randomDecimal(min: number, max: number) {
+  return String(_.round(_.random(min, max, true), 2))
+}
+
 function getAccountList() {
   const data = [
-    { id: 1, name: 'Cash', is_hidden: false, type: 1, balance: _.random(100, 200, true) },
-    { id: 2, name: 'CMB', is_hidden: false, type: 1, balance: _.random(500000, 800000, true) },
-    { id: 3, name: 'Alipay', is_hidden: false, type: 1, balance: _.random(500000, 800000, true) },
-    { id: 4, name: 'CMB credit card', is_hidden: false, type: 2, balance: -_.random(10, 20, true) },
-    { id: 5, name: 'Home loan', is_hidden: false, type: 2, balance: -_.random(5000, 800000, true) },
-    { id: 6, name: 'Hidden liability', is_hidden: true, type: 2, balance: -_.random(10, 20, true) },
+    { id: 1, name: 'Cash', is_hidden: false, type: 1, balance: randomDecimal(100, 200) },
+    { id: 2, name: 'CMB', is_hidden: false, type: 1, balance: randomDecimal(10000, 20000) },
+    { id: 3, name: 'Alipay', is_hidden: false, type: 1, balance: randomDecimal(50000, 100000) },
+    { id: 4, name: 'CMB credit card', is_hidden: false, type: 2, balance: randomDecimal(-20, -10) },
+    { id: 5, name: 'Home loan', is_hidden: false, type: 2, balance: randomDecimal(-50000, -10000) },
+    { id: 6, name: 'Hidden liability', is_hidden: true, type: 2, balance: randomDecimal(-20, -10) },
   ]
   _.times(20, i => {
     data.push({
@@ -16,7 +20,7 @@ function getAccountList() {
       name: 'Account ' + (21 + i),
       is_hidden: false,
       type: 2,
-      balance: -_.random(1000, 2000, true),
+      balance: randomDecimal(-2000, -1000),
     })
   })
   return { data }
@@ -29,7 +33,7 @@ function getAccount() {
       name: 'Cash',
       is_hidden: false,
       type: 1,
-      initial_balance: 1234.56,
+      initial_balance: '1234.56',
     },
   }
 }

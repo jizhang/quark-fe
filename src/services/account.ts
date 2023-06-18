@@ -5,8 +5,8 @@ export interface Account {
   name: string
   is_hidden: boolean
   type: number
-  initial_balance: number,
-  balance: number
+  initial_balance: string,
+  balance: string,
 }
 
 interface AccountListResponse {
@@ -17,15 +17,17 @@ export async function getAccountList(): Promise<AccountListResponse> {
   return get('/api/account/list')
 }
 
-export async function getAccount(id: number): Promise<{ account: Account }> {
-  return get('/api/account/get', { id })
+export interface AccountForm {
+  id?: number
+  name: string
+  is_hidden: boolean
+  type: number
+  initial_balance: string
 }
 
-export interface AccountForm {
-  id?: string
-  name: string
-  type: string
-  initial_balance: string
+export async function getAccount(id: number): Promise<AccountForm> {
+  const payload = await get('/api/account/get', { id })
+  return payload.account
 }
 
 export async function saveAccount(account: AccountForm): Promise<{ id: number }> {
