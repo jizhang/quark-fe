@@ -33,18 +33,18 @@ export default () => {
     if (accountId) {
       service.getAccount(_.toNumber(accountId)).then(account => {
         setInitialValues({
-          id: String(account.id),
+          id: account.id,
           name: account.name,
           is_hidden: account.is_hidden,
           type: String(account.type),
-          initial_balance: String(account.initial_balance),
+          initial_balance: account.initial_balance,
         })
       })
     }
   }, [accountId])
 
   const [initialValues, setInitialValues] = useState({
-    id: '',
+    id: undefined as number | undefined,
     name: '',
     is_hidden: false,
     type: String(consts.ACCOUNT_TYPE_ASSET),
@@ -66,7 +66,14 @@ export default () => {
     }),
 
     onSubmit: (values) => {
-      service.saveAccount(values).then(() => {
+      const accountForm = {
+        id: values.id,
+        name: values.name,
+        is_hidden: values.is_hidden,
+        type: _.toInteger(values.type),
+        initial_balance: values.initial_balance,
+      }
+      service.saveAccount(accountForm).then(() => {
         navigate('/')
       })
     },

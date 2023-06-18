@@ -17,17 +17,17 @@ export async function getAccountList(): Promise<AccountListResponse> {
   return get('/api/account/list')
 }
 
-export async function getAccount(id: number): Promise<Account> {
-  const payload = await get('/api/account/get', { id })
-  return payload.account
-}
-
 export interface AccountForm {
-  id?: string
+  id?: number
   name: string
   is_hidden: boolean
-  type: string
+  type: number
   initial_balance: string
+}
+
+export async function getAccount(id: number): Promise<AccountForm> {
+  const payload = await get('/api/account/get', { id })
+  return payload.account
 }
 
 export async function saveAccount(account: AccountForm): Promise<{ id: number }> {
