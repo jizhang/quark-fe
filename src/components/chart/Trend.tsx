@@ -4,16 +4,24 @@ import * as chartService from '@/services/chart'
 import ExpenseIncomeChart from './ExpenseIncomeChart'
 import _ from 'lodash'
 
+type Payload = chartService.ExpenseIncomeChartResponse
+
+function getDefaultPayload(): Payload {
+  return {
+    categories: [],
+    data: [],
+  }
+}
+
 interface Props {
   year: string
 }
 
 export default (props: Props) => {
-  const emptyPayload = () => ({ categories: [], data: [] })
-  const [netCapital, setNetCapital] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
-  const [expense, setExpense] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
-  const [income, setIncome] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
-  const [investment, setInvestment] = useState<chartService.ExpenseIncomeChartResponse>(emptyPayload())
+  const [netCapital, setNetCapital] = useState(getDefaultPayload())
+  const [expense, setExpense] = useState(getDefaultPayload())
+  const [income, setIncome] = useState(getDefaultPayload())
+  const [investment, setInvestment] = useState(getDefaultPayload())
 
   useEffect(() => {
     chartService.getNetCapitalChart(props.year).then(data => {

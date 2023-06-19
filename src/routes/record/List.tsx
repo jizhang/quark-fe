@@ -73,6 +73,8 @@ function makeGroups(records: service.RecordItem[]) {
   return groups
 }
 
+const getDefaultYear = () => dayjs().format('YYYY')
+
 export default () => {
   const [filterState, setFilterState] = useQueryState({})
   const filterForm = useMemo(() => parseFilterForm(filterState), [filterState])
@@ -83,25 +85,25 @@ export default () => {
   }
 
   const [data, setData] = useState<service.RecordItem[]>([])
-  const [year, setYear] = useState(dayjs().format('YYYY'))
+  const [year, setYear] = useState(getDefaultYear())
   const moreYear = dayjs(year, 'YYYY').subtract(1, 'year').format('YYYY')
 
   useEffect(() => {
+    service.getRecordList(filterForm).then(payload => {
+      setData(payload.data)
+      setYear(getDefaultYear())
+    })
+  }, [filterForm])
+
+  function handleLoadMore() {
     const args = {
       ...filterForm,
-      year,
+      year: moreYear,
     }
     service.getRecordList(args).then(payload => {
-      setData(data => {
-        const keys = new Set(_.map(data, 'id'))
-        const newData = _.reject(payload.data, item => keys.has(item.id))
-        return [...data, ...newData]
-      })
+      setData([...data, ...payload.data])
+      setYear(moreYear)
     })
-  }, [filterForm, year])
-
-  function handleLoad() {
-    setYear(moreYear)
   }
 
   function getIcon(recordType: number) {
@@ -161,7 +163,7 @@ export default () => {
         <ListItem disablePadding>
           <ListItemButton
             sx={{ justifyContent: 'center' }}
-            onClick={handleLoad}
+            onClick={handleLoadMore}
           >Load {moreYear}</ListItemButton>
         </ListItem>
       </List>
