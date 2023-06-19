@@ -4,6 +4,7 @@ export interface FilterForm {
   record_type?: number
   category_id?: number
   account_id?: number
+  year?: string
 }
 
 export interface RecordItem {
