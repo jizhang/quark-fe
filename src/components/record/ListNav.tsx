@@ -1,18 +1,13 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
 } from '@mui/material'
 import {
   Add as AddIcon,
-  MoreVert,
   FilterAlt,
 } from '@mui/icons-material'
 import type { FilterForm } from '@/services/record'
@@ -25,23 +20,9 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const navigate = useNavigate()
-
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-  const open = Boolean(anchorEl)
-
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget)
-  }
-
-  function handleClose() {
-    setAnchorEl(null)
-  }
-
   const [filterDialogOpen, setFilterDialogOpen] = useState(false)
 
   function handleOpenFilterDialog() {
-    handleClose()
     setFilterDialogOpen(true)
   }
 
@@ -61,23 +42,13 @@ export default (props: Props) => {
           <SideMenu />
           <Typography variant="h6" sx={{ flexGrow: 1 }}>Record List</Typography>
 
-          <IconButton size="large" edge="end" color="inherit" onClick={handleClick}>
-            <MoreVert />
+          <IconButton size="large" edge="end" color="inherit" onClick={handleOpenFilterDialog}>
+            <FilterAlt />
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={() => { navigate('/record/edit') }}>
-              <ListItemIcon><AddIcon /></ListItemIcon>
-              <ListItemText>Add Record</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleOpenFilterDialog}>
-              <ListItemIcon><FilterAlt /></ListItemIcon>
-              <ListItemText>Filter</ListItemText>
-            </MenuItem>
-          </Menu>
+          <IconButton size="large" edge="end" color="inherit" component={Link} to="/record/edit">
+            <AddIcon />
+          </IconButton>
+
           <FilterDialog
             values={props.filterForm}
             open={filterDialogOpen}

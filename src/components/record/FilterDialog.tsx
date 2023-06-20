@@ -10,6 +10,7 @@ import {
   Select,
   MenuItem,
   Button,
+  TextField,
 } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material'
 import _ from 'lodash'
@@ -36,6 +37,7 @@ export default (props: Props) => {
       record_type: props.values.record_type ? String(props.values.record_type) : VALUE_ALL,
       category_id: props.values.category_id ? String(props.values.category_id): VALUE_ALL,
       account_id: props.values.account_id ? String(props.values.account_id) : VALUE_ALL,
+      keyword: props.values.keyword || '',
     },
 
     onSubmit: (values) => {
@@ -43,6 +45,7 @@ export default (props: Props) => {
         record_type: values.record_type !== VALUE_ALL ? _.toInteger(values.record_type) : undefined,
         category_id: values.category_id !== VALUE_ALL ? _.toInteger(values.category_id) : undefined,
         account_id: values.account_id !== VALUE_ALL ? _.toInteger(values.account_id) : undefined,
+        keyword: _.trim(values.keyword) || undefined,
       })
     },
   })
@@ -56,6 +59,7 @@ export default (props: Props) => {
       record_type: VALUE_ALL,
       category_id: VALUE_ALL,
       account_id: VALUE_ALL,
+      keyword: '',
     })
     form.submitForm()
   }
@@ -136,6 +140,12 @@ export default (props: Props) => {
               ))}
             </Select>
           </FormControl>
+          <TextField
+            label="Keyword"
+            name="keyword"
+            value={form.values.keyword}
+            onChange={form.handleChange}
+          />
         </Stack>
       </DialogContent>
       <DialogActions>

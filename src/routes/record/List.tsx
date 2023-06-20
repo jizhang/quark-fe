@@ -19,19 +19,16 @@ import {
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
-import useQueryState, { type QueryState } from '@/common/use-query-state'
+import useQueryState, { type QueryState, optInt, optStr } from '@/common/use-query-state'
 import * as service from '@/services/record'
 import Nav from '@/components/record/ListNav'
 import TitleAmount from '@/components/TitleAmount'
-
-function optInt(params: QueryState, key: string) {
-  return params[key] ? _.toInteger(params[key]) : undefined
-}
 
 function parseFilterForm(params: QueryState) {
   const form: service.FilterForm = {
     record_type: optInt(params, 'record_type'),
     account_id: optInt(params, 'account_id'),
+    keyword: optStr(params, 'keyword'),
   }
 
   if (form.record_type) {
