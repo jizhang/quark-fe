@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material'
 import { useConfirm } from 'material-ui-confirm'
 import _ from 'lodash'
+import { formatAmount } from '@/common/utils'
 import * as accountService from '@/services/account'
 
 interface Props {
@@ -51,7 +52,7 @@ export default (props: Props) => {
       <ListItemIcon onClick={handleDragDrop}>
         <DragHandle />
       </ListItemIcon>
-      <ListItemText>{account.name}</ListItemText>
+      <ListItemText secondary={formatAmount(account.balance)}>{account.name}</ListItemText>
       <IconButton onClick={handleEdit} sx={iconSx}>
         <EditIcon />
       </IconButton>
