@@ -48,7 +48,7 @@ export default (props: Props) => {
   const iconSx = { p: 0, ml: 2 }
 
   return (
-    <ListItem key={account.id}>
+    <ListItem>
       <ListItemIcon onClick={handleDragDrop}>
         <DragHandle />
       </ListItemIcon>

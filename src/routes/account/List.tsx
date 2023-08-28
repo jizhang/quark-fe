@@ -10,7 +10,7 @@ import _ from 'lodash'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
-import EditingItem from '@/components/account/EditingItem'
+import EditingList from '@/components/account/EditingList'
 import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
 
 export default () => {
@@ -18,23 +18,6 @@ export default () => {
   const netCapital = _(accountGroups).map('total').sum()
 
   const [editing, setEditing] = useState(false)
-
-  function renderGroup(group: AccountGroup) {
-    const accounts = editing ? group.accounts : _.reject(group.accounts, 'is_hidden')
-    if (accounts.length === 0) return []
-    return [
-      <ListSubheader key={`group-${group.id}`}>
-        {editing ? group.name : (
-          <TitleAmount title={group.name} amount={group.total} />
-        )}
-      </ListSubheader>,
-      ...accounts.map(account => editing ? (
-        <EditingItem key={account.id} account={account} onDelete={deleteAccount} />
-      ) : (
-        <LinkItem key={account.id} account={account} />
-      )),
-    ]
-  }
 
   return (
     <Box>
@@ -45,8 +28,27 @@ export default () => {
             <TitleAmount title="Net capital" amount={netCapital} />
           </ListItemText>
         </ListItem>
-        {accountGroups.flatMap(renderGroup)}
       </List>
+      {accountGroups.map(group => {
+        if (editing) {
+          return <EditingList key={`group-${group.id}`} group={group} />
+        } else {
+          const accounts = _.reject(group.accounts, 'is_hidden')
+          if (accounts.length === 0) {
+            return null
+          }
+          return (
+            <List key={`group-${group.id}`}>
+              <ListSubheader>
+                <TitleAmount title={group.name} amount={group.total} />
+              </ListSubheader>
+              {accounts.map(account => (
+                <LinkItem key={account.id} account={account} />
+              ))}
+            </List>
+          )
+        }
+      })}
     </Box>
   )
 }

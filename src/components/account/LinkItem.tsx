@@ -14,7 +14,7 @@ interface Props {
 export default (props: Props) => {
   const { account } = props
   return (
-    <ListItem key={account.id} disablePadding>
+    <ListItem disablePadding>
       <ListItemButton
         component={Link}
         to={{
