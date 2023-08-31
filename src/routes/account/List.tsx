@@ -11,7 +11,7 @@ import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
 import EditingGroup from '@/components/account/EditingGroup'
-import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
+import useAccounts from '@/components/account/use-accounts'
 
 export default () => {
   const { accountGroups, deleteAccount, moveAccount } = useAccounts()

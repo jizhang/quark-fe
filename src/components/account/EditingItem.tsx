@@ -12,24 +12,9 @@ import {
 } from '@mui/icons-material'
 import { useConfirm } from 'material-ui-confirm'
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  MouseSensor,
-  DragOverlay,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   useSortable,
-} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
+} from '@dnd-kit/sortable'
+import {CSS} from '@dnd-kit/utilities'
 import _ from 'lodash'
 import { formatAmount } from '@/common/utils'
 import * as accountService from '@/services/account'
@@ -52,12 +37,12 @@ export default (props: Props) => {
     transform,
     transition,
     setActivatorNodeRef,
-  } = useSortable({id: account.id});
+  } = useSortable({id: account.id})
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+  }
 
   function handleEdit() {
     navigate({

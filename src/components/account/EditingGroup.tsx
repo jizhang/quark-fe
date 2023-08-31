@@ -1,32 +1,19 @@
-import { type ReactNode } from 'react'
 import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
   ListSubheader,
 } from '@mui/material'
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
-  PointerSensor,
   TouchSensor,
   useSensor,
   useSensors,
   MouseSensor,
-  DragOverlay,
   type DragEndEvent,
-} from '@dnd-kit/core';
+} from '@dnd-kit/core'
 import {
-  arrayMove,
   SortableContext,
-  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-import _ from 'lodash'
+} from '@dnd-kit/sortable'
 import { type AccountGroup } from '@/components/account/use-accounts'
 import EditingItem from './EditingItem'
 
