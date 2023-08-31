@@ -50,6 +50,10 @@ function deleteAccount() {
   }
 }
 
+function moveAccount() {
+  return 'ok'
+}
+
 export default [
   {
     url: '/api/account/list',
@@ -67,5 +71,10 @@ export default [
   {
     url: '/api/account/delete',
     response: deleteAccount,
+  },
+  {
+    url: '/api/account/move',
+    method: 'post',
+    response: moveAccount,
   },
 ] as MockMethod[]

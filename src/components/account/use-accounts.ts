@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import _ from 'lodash'
 import * as consts from '@/common/consts'
 import * as accountService from '@/services/account'
+import { enqueueSnackbar } from 'notistack'
 
 export interface AccountGroup {
   id: number
@@ -36,9 +37,29 @@ export default () => {
     setAccounts(_.reject(accounts, ['id', id]))
   }
 
+  function moveAccount(activeId: number, overId: number) {
+    const activeAccount = _.find(accounts, ['id', activeId])
+    const overIndex = _.findIndex(accounts, ['id', overId])
+    if (_.isUndefined(activeAccount) || _.isUndefined(overIndex)) {
+      return
+    }
+
+    const originalAccounts = _.clone(accounts)
+    const reorderedAccounts = _.without(accounts, activeAccount)
+    reorderedAccounts.splice(overIndex, 0, activeAccount)
+    setAccounts(reorderedAccounts)
+
+    accountService.moveAccount(activeId, overId).then(() => {
+      enqueueSnackbar('Account order saved.', { variant: 'success' })
+    }, () => {
+      setAccounts(originalAccounts)
+    })
+  }
+
   return {
     accounts,
     accountGroups,
     deleteAccount,
+    moveAccount,
   }
 }

@@ -37,3 +37,10 @@ export async function saveAccount(account: AccountForm): Promise<{ id: number }>
 export async function deleteAccount(id: number) {
   return post('/api/account/delete', { id })
 }
+
+export async function moveAccount(activeId: number, overId: number) {
+  return post('/api/account/move', {
+    'active_id': activeId,
+    'over_id': overId,
+  })
+}

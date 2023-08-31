@@ -14,7 +14,7 @@ import EditingList from '@/components/account/EditingList'
 import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
 
 export default () => {
-  const { accountGroups, deleteAccount } = useAccounts()
+  const { accountGroups, deleteAccount, moveAccount } = useAccounts()
   const netCapital = _(accountGroups).map('total').sum()
 
   const [editing, setEditing] = useState(false)
@@ -31,7 +31,14 @@ export default () => {
       </List>
       {accountGroups.map(group => {
         if (editing) {
-          return <EditingList key={`group-${group.id}`} group={group} />
+          return (
+            <EditingList
+              key={`group-${group.id}`}
+              group={group}
+              deleteAccount={deleteAccount}
+              moveAccount={moveAccount}
+            />
+          )
         } else {
           const accounts = _.reject(group.accounts, 'is_hidden')
           if (accounts.length === 0) {
