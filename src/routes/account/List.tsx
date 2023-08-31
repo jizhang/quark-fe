@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   List,
@@ -10,31 +10,14 @@ import _ from 'lodash'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
-import EditingItem from '@/components/account/EditingItem'
-import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
+import EditingGroup from '@/components/account/EditingGroup'
+import useAccounts from '@/components/account/use-accounts'
 
 export default () => {
-  const { accountGroups, deleteAccount } = useAccounts()
+  const { accountGroups, deleteAccount, moveAccount } = useAccounts()
   const netCapital = _(accountGroups).map('total').sum()
 
   const [editing, setEditing] = useState(false)
-
-  function renderGroup(group: AccountGroup) {
-    const accounts = editing ? group.accounts : _.reject(group.accounts, 'is_hidden')
-    if (accounts.length === 0) return []
-    return [
-      <ListSubheader key={`group-${group.id}`}>
-        {editing ? group.name : (
-          <TitleAmount title={group.name} amount={group.total} />
-        )}
-      </ListSubheader>,
-      ...accounts.map(account => editing ? (
-        <EditingItem key={account.id} account={account} onDelete={deleteAccount} />
-      ) : (
-        <LinkItem key={account.id} account={account} />
-      )),
-    ]
-  }
 
   return (
     <Box>
@@ -45,7 +28,37 @@ export default () => {
             <TitleAmount title="Net capital" amount={netCapital} />
           </ListItemText>
         </ListItem>
-        {accountGroups.flatMap(renderGroup)}
+        {accountGroups.flatMap(group => {
+          if (group.accounts.length === 0) {
+            return []
+          }
+
+          if (editing) {
+            return [
+              <EditingGroup
+                key={`group-${group.id}`}
+                group={group}
+                deleteAccount={deleteAccount}
+                moveAccount={moveAccount}
+              />,
+            ]
+          }
+
+          const accounts = _.reject(group.accounts, 'is_hidden')
+          if (accounts.length === 0) {
+            return []
+          }
+          return [
+            <React.Fragment key={`group-${group.id}`}>
+              <ListSubheader>
+                <TitleAmount title={group.name} amount={group.total} />
+              </ListSubheader>
+              {accounts.map(account => (
+                <LinkItem key={account.id} account={account} />
+              ))}
+            </React.Fragment>,
+          ]
+        })}
       </List>
     </Box>
   )

@@ -11,6 +11,10 @@ import {
   DragHandle,
 } from '@mui/icons-material'
 import { useConfirm } from 'material-ui-confirm'
+import {
+  useSortable,
+} from '@dnd-kit/sortable'
+import {CSS} from '@dnd-kit/utilities'
 import _ from 'lodash'
 import { formatAmount } from '@/common/utils'
 import * as accountService from '@/services/account'
@@ -25,6 +29,20 @@ export default (props: Props) => {
 
   const confirm = useConfirm()
   const navigate = useNavigate()
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    setActivatorNodeRef,
+  } = useSortable({id: account.id})
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
 
   function handleEdit() {
     navigate({
@@ -41,15 +59,18 @@ export default (props: Props) => {
     }, _.noop)
   }
 
-  function handleDragDrop() {
-    alert('Not implemented yet.')
-  }
-
   const iconSx = { p: 0, ml: 2 }
 
   return (
-    <ListItem key={account.id}>
-      <ListItemIcon onClick={handleDragDrop}>
+    <ListItem
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+    >
+      <ListItemIcon
+        ref={setActivatorNodeRef}
+        {...listeners}
+      >
         <DragHandle />
       </ListItemIcon>
       <ListItemText secondary={formatAmount(account.balance)}>{account.name}</ListItemText>
