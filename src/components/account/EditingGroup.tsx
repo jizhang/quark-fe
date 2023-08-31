@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import {
   Box,
   List,
@@ -47,13 +48,13 @@ export default (props: Props) => {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <List>
-        <ListSubheader>{props.group.name}</ListSubheader>
+    <>
+      <ListSubheader>{props.group.name}</ListSubheader>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
         <SortableContext
           items={props.group.accounts}
           strategy={verticalListSortingStrategy}
@@ -66,7 +67,7 @@ export default (props: Props) => {
             />
           ))}
         </SortableContext>
-      </List>
-    </DndContext>
+      </DndContext>
+    </>
   )
 }

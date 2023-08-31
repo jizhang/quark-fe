@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   List,
@@ -10,7 +10,7 @@ import _ from 'lodash'
 import Nav from '@/components/account/ListNav'
 import TitleAmount from '@/components/TitleAmount'
 import LinkItem from '@/components/account/LinkItem'
-import EditingList from '@/components/account/EditingList'
+import EditingGroup from '@/components/account/EditingGroup'
 import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
 
 export default () => {
@@ -28,34 +28,38 @@ export default () => {
             <TitleAmount title="Net capital" amount={netCapital} />
           </ListItemText>
         </ListItem>
-      </List>
-      {accountGroups.map(group => {
-        if (editing) {
-          return (
-            <EditingList
-              key={`group-${group.id}`}
-              group={group}
-              deleteAccount={deleteAccount}
-              moveAccount={moveAccount}
-            />
-          )
-        } else {
+        {accountGroups.flatMap(group => {
+          if (group.accounts.length === 0) {
+            return []
+          }
+
+          if (editing) {
+            return [
+              <EditingGroup
+                key={`group-${group.id}`}
+                group={group}
+                deleteAccount={deleteAccount}
+                moveAccount={moveAccount}
+              />,
+            ]
+          }
+
           const accounts = _.reject(group.accounts, 'is_hidden')
           if (accounts.length === 0) {
-            return null
+            return []
           }
-          return (
-            <List key={`group-${group.id}`}>
+          return [
+            <React.Fragment key={`group-${group.id}`}>
               <ListSubheader>
                 <TitleAmount title={group.name} amount={group.total} />
               </ListSubheader>
               {accounts.map(account => (
                 <LinkItem key={account.id} account={account} />
               ))}
-            </List>
-          )
-        }
-      })}
+            </React.Fragment>,
+          ]
+        })}
+      </List>
     </Box>
   )
 }
