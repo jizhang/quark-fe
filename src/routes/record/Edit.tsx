@@ -28,6 +28,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import * as consts from '@/common/consts'
+import * as utils from '@/common/utils'
 import * as userService from '@/services/user'
 import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
@@ -75,7 +76,7 @@ export default () => {
           account_id: String(payload.account_id),
           target_account_id: payload.target_account_id ? String(payload.target_account_id) : '',
           record_time: dayjs(payload.record_time),
-          amount: payload.amount,
+          amount: utils.formatAmountEdit(payload.amount),
           remark: String(payload.remark),
         })
       })

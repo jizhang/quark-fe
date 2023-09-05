@@ -19,6 +19,13 @@ export function formatAmountTick(value: any) {
   return value
 }
 
+export function formatAmountEdit(value: string) {
+  if (value.includes('.')) {
+    return value.replace(/0+$/, '').replace(/\.$/, '')
+  }
+  return value
+}
+
 export function formatMonth(value: any, format: string) {
   return dayjs(String(value), 'YYYYMM').format(format)
 }

@@ -22,6 +22,7 @@ import _ from 'lodash'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import * as consts from '@/common/consts'
+import * as utils from '@/common/utils'
 import * as service from '@/services/account'
 
 export default () => {
@@ -37,7 +38,7 @@ export default () => {
           name: account.name,
           is_hidden: account.is_hidden,
           type: String(account.type),
-          initial_balance: account.initial_balance,
+          initial_balance: utils.formatAmountEdit(account.initial_balance),
         })
       })
     }
