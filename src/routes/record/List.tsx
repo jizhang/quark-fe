@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate, useLocation, useHref } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -17,6 +17,7 @@ import {
   ArrowRight,
 } from '@mui/icons-material'
 import _ from 'lodash'
+import qs from 'qs'
 import dayjs from 'dayjs'
 import * as consts from '@/common/consts'
 import useQueryState, { type QueryState, optInt, optStr } from '@/common/use-query-state'
@@ -131,9 +132,39 @@ export default () => {
     return item.remark ? `${time} - ${item.remark}` : time
   }
 
+  const navigate = useNavigate()
+  const href = useHref(useLocation())
+
+  function handleAddRecord() {
+    if (filterForm.account_id) {
+      gotoEditRecord({ account_id: filterForm.account_id })
+    } else {
+      gotoEditRecord({})
+    }
+  }
+
+  function handleEditRecord(id: number) {
+    gotoEditRecord({ id })
+  }
+
+  function gotoEditRecord(params: object) {
+    const searchParams = {
+      ...params,
+      from_url: href,
+    }
+    navigate({
+      pathname: '/record/edit',
+      search: '?' + qs.stringify(searchParams),
+    })
+  }
+
   return (
     <Box>
-      <Nav filterForm={filterForm} onChangeFilterForm={handleChangeFilterForm} />
+      <Nav
+        filterForm={filterForm}
+        onChangeFilterForm={handleChangeFilterForm}
+        onAddRecord={handleAddRecord}
+      />
       <List>
         {makeGroups(data).map(group => (
           <React.Fragment key={group.month}>
@@ -146,8 +177,7 @@ export default () => {
                 disablePadding
               >
                 <ListItemButton
-                  component={Link}
-                  to={{ pathname: '/record/edit', search: `id=${item.id}` }}
+                  onClick={() => handleEditRecord(item.id)}
                   alignItems="flex-start"
                 >
                   <ListItemAvatar><Avatar>{getIcon(item.record_type)}</Avatar></ListItemAvatar>

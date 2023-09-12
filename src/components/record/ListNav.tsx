@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -17,6 +16,7 @@ import FilterDialog from './FilterDialog'
 interface Props {
   filterForm: FilterForm
   onChangeFilterForm: (values: FilterForm) => void
+  onAddRecord: () => void
 }
 
 export default (props: Props) => {
@@ -45,7 +45,12 @@ export default (props: Props) => {
           <IconButton size="large" edge="end" color="inherit" onClick={handleOpenFilterDialog}>
             <FilterAlt />
           </IconButton>
-          <IconButton size="large" edge="end" color="inherit" component={Link} to="/record/edit">
+          <IconButton
+            size="large"
+            edge="end"
+            color="inherit"
+            onClick={props.onAddRecord}
+          >
             <AddIcon />
           </IconButton>
 

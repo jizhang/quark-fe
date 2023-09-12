@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   AppBar,
@@ -54,12 +54,13 @@ export default () => {
   const confirm = useConfirm()
   const [searchParams] = useSearchParams()
   const recordId = searchParams.get('id')
+  const initialAccountId = searchParams.get('account_id') || ''
 
   const [initialValues, setInitialValues] = useState({
     id: '',
     record_type: String(consts.RECORD_TYPE_EXPENSE),
     category_id: '',
-    account_id: '',
+    account_id: initialAccountId,
     target_account_id: '',
     record_time: dayjs() as Dayjs | null,
     amount: '',
@@ -77,10 +78,10 @@ export default () => {
           target_account_id: payload.target_account_id ? String(payload.target_account_id) : '',
           record_time: dayjs(payload.record_time),
           amount: utils.formatAmountEdit(payload.amount),
-          remark: String(payload.remark),
+          remark: payload.remark,
         })
       })
-    } else {
+    } else if (!initialAccountId) {
       userService.getUserSetting().then(payload => {
         if (payload.default_account_id) {
           setInitialValues(initialValues => {
@@ -92,7 +93,7 @@ export default () => {
         }
       })
     }
-  }, [recordId])
+  }, [recordId, initialAccountId])
 
   const form = useFormik({
     enableReinitialize: true,
@@ -136,7 +137,7 @@ export default () => {
       }
 
       service.saveRecord(recordForm).then(() => {
-        navigate('/record/list')
+        gotoFromUrl()
       })
     },
   })
@@ -153,7 +154,7 @@ export default () => {
   function handleDelete() {
     confirm().then(() => {
       service.deleteRecord(_.toInteger(form.values.id)).then(() => {
-        navigate('/record/list')
+        gotoFromUrl()
       })
     }, _.noop)
   }
@@ -168,6 +169,11 @@ export default () => {
     })
   }, [])
 
+  function gotoFromUrl() {
+    const fromUrl = searchParams.get('from_url') || '/record/list'
+    navigate(fromUrl)
+  }
+
   return (
     <Box>
       <AppBar position="fixed">
@@ -177,8 +183,7 @@ export default () => {
             edge="start"
             color="inherit"
             sx={{ mr: 2 }}
-            component={Link}
-            to="/record/list"
+            onClick={gotoFromUrl}
           >
             <ArrowBackIos />
           </IconButton>
