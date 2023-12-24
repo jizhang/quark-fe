@@ -89,7 +89,7 @@ export default () => {
             value={formik.values.default_account_id}
             onChange={formik.handleChange}
           >
-            {accounts.map(item => (
+            {accounts.filter(item => !item.is_hidden).map(item => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>

@@ -34,11 +34,18 @@ import * as categoryService from '@/services/category'
 import * as service from '@/services/record'
 import useAccounts, { type AccountGroup } from '@/components/account/use-accounts'
 
-function renderAccounts(groups: AccountGroup[]) {
+function renderAccounts(groups: AccountGroup[], initialAccountId: string) {
   return groups.flatMap(group => {
+    const accounts = group.accounts.filter(account => {
+      return !account.is_hidden || String(account.id) === initialAccountId
+    })
+    if (accounts.length === 0) {
+      return []
+    }
+
     return [
       <ListSubheader key={`group-${group.id}`}>{group.name}</ListSubheader>,
-      ...group.accounts.map(account => (
+      ...accounts.map(account => (
         <MenuItem
           key={account.id}
           value={account.id}
@@ -224,7 +231,7 @@ export default () => {
             value={form.values.account_id}
             label={form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) ? 'Source Account' : 'Account'}
             onChange={form.handleChange}
-          >{renderAccounts(accountGroups)}</Select>
+          >{renderAccounts(accountGroups, initialValues.account_id)}</Select>
           <FormHelperText>{form.touched.account_id && form.errors.account_id}</FormHelperText>
         </FormControl>
         {form.values.record_type === String(consts.RECORD_TYPE_TRANSFER) && (
@@ -235,7 +242,7 @@ export default () => {
               value={form.values.target_account_id}
               label="Target Account"
               onChange={form.handleChange}
-            >{renderAccounts(accountGroups)}</Select>
+            >{renderAccounts(accountGroups, initialValues.target_account_id)}</Select>
             <FormHelperText>{form.touched.target_account_id && form.errors.target_account_id}</FormHelperText>
           </FormControl>
         )}
