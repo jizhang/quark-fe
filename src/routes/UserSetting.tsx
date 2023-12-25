@@ -25,7 +25,7 @@ import * as userService from '@/services/user'
 export default () => {
   const navigate = useNavigate()
   const [initialValues, setInitialValues] = useState({
-    default_account_id: '',
+    default_account_id: '0',
   })
 
   const formik = useFormik({
@@ -49,7 +49,7 @@ export default () => {
   useEffect(() => {
     userService.getUserSetting().then(payload => {
       setInitialValues({
-        default_account_id: payload.default_account_id ? String(payload.default_account_id) : '',
+        default_account_id: payload.default_account_id ? String(payload.default_account_id) : '0',
       })
     })
   }, [])
@@ -89,6 +89,7 @@ export default () => {
             value={formik.values.default_account_id}
             onChange={formik.handleChange}
           >
+            <MenuItem value={0}>Not set</MenuItem>
             {accounts.filter(item => !item.is_hidden).map(item => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
