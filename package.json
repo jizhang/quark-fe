@@ -49,7 +49,7 @@
     "mockjs": "^1.1.0",
     "rollup-plugin-visualizer": "^5.9.2",
     "typescript": "^5.0.4",
-    "vite": "^4.5.1",
+    "vite": "^4.5.2",
     "vite-plugin-mock": "^2.9.8"
   }
 }
