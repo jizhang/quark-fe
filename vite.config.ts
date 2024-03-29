@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'url'
 import { defineConfig, UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { viteMockServe } from 'vite-plugin-mock'
+import { mockPlugin } from './mock-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
@@ -16,10 +16,6 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       react(),
-      viteMockServe({
-        localEnabled: mockEnabled,
-        prodEnabled: false,
-      }),
     ],
     build: {
       rollupOptions: {
@@ -34,7 +30,9 @@ export default defineConfig(({ command }) => {
     },
   }
 
-  if (!mockEnabled) {
+  if (mockEnabled) {
+    config.plugins.push(mockPlugin())
+  } else {
     config.server = {
       proxy: {
         '/api': {

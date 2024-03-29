@@ -1,8 +1,13 @@
-import dayjs from 'dayjs'
-import { MockMethod } from 'vite-plugin-mock'
+const sendJson = require('send-data/json')
+const url = require('url')
+const qs = require('qs')
+const dayjs = require('dayjs')
 
-function getRecordList({ query }) {
-  const year: string = query.year ?? dayjs().format('YYYY')
+const parseQuery = req => qs.parse(url.parse(req.url).query)
+
+function getRecordList(req, res) {
+  const query = parseQuery(req)
+  const year = query.year ?? dayjs().format('YYYY')
   const data = [
     {
       id: parseInt(year) * 100 + 3,
@@ -32,11 +37,11 @@ function getRecordList({ query }) {
       remark: '',
     },
   ]
-  return { data }
+  sendJson(req, res, { data })
 }
 
-function getRecord() {
-  return {
+function getRecord(req, res) {
+  sendJson(req, res, {
     id: 1,
     record_type: 1,
     category_id: 1,
@@ -44,36 +49,24 @@ function getRecord() {
     record_time: '2023-05-05 08:17:00',
     amount: '10.9',
     remark: 'Remark 1',
-  }
+  })
 }
 
-function saveRecord() {
-  return {
+function saveRecord(req, res) {
+  sendJson(req, res, {
     id: 1,
-  }
+  })
 }
 
-function deleteRecord() {
-  return {
+function deleteRecord(req, res) {
+  sendJson(req, res, {
     id: 1,
-  }
+  })
 }
 
-export default [
-  {
-    url: '/api/record/list',
-    response: getRecordList,
-  },
-  {
-    url: '/api/record/get',
-    response: getRecord,
-  },
-  {
-    url: '/api/record/save',
-    response: saveRecord,
-  },
-  {
-    url: '/api/record/delete',
-    response: deleteRecord,
-  },
-] as MockMethod[]
+module.exports = {
+  'GET /api/record/list': getRecordList,
+  'GET /api/record/get': getRecord,
+  'POST /api/record/save': saveRecord,
+  'POST /api/record/delete': deleteRecord,
+}
