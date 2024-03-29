@@ -1,11 +1,11 @@
-import _ from 'lodash'
-import { MockMethod } from 'vite-plugin-mock'
+const sendJson = require('send-data/json')
+const _ = require('lodash')
 
-function randomDecimal(min: number, max: number) {
+function randomDecimal(min, max) {
   return String(_.round(_.random(min, max, true), 2))
 }
 
-function getAccountList() {
+function getAccountList(req, res) {
   const data = [
     { id: 1, name: 'Cash', is_hidden: false, type: 1, balance: randomDecimal(100, 200) },
     { id: 2, name: 'CMB', is_hidden: false, type: 1, balance: randomDecimal(10000, 20000) },
@@ -23,11 +23,11 @@ function getAccountList() {
       balance: randomDecimal(-2000, -1000),
     })
   })
-  return { data }
+  sendJson(req, res, { data })
 }
 
-function getAccount() {
-  return {
+function getAccount(req, res) {
+  sendJson(req, res, {
     account: {
       id: 1,
       name: 'Cash',
@@ -35,46 +35,29 @@ function getAccount() {
       type: 1,
       initial_balance: '1234.56',
     },
-  }
+  })
 }
 
-function saveAccount() {
-  return {
+function saveAccount(req, res) {
+  sendJson(req, res, {
     id: 1,
-  }
+  })
 }
 
-function deleteAccount() {
-  return {
+function deleteAccount(req, res) {
+  sendJson(req, res, {
     id: 1,
-  }
+  })
 }
 
-function moveAccount() {
-  return 'ok'
+function moveAccount(req, res) {
+  sendJson(req, res, 'ok')
 }
 
-export default [
-  {
-    url: '/api/account/list',
-    response: getAccountList,
-  },
-  {
-    url: '/api/account/get',
-    response: getAccount,
-  },
-  {
-    url: '/api/account/save',
-    statusCode: 200,
-    response: saveAccount,
-  },
-  {
-    url: '/api/account/delete',
-    response: deleteAccount,
-  },
-  {
-    url: '/api/account/move',
-    method: 'post',
-    response: moveAccount,
-  },
-] as MockMethod[]
+module.exports = {
+  'GET /api/account/list': getAccountList,
+  'GET /api/account/get': getAccount,
+  'POST /api/account/save': saveAccount,
+  'POST /api/account/delete': deleteAccount,
+  'POST /api/account/move': moveAccount,
+}
