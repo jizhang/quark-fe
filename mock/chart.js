@@ -1,14 +1,14 @@
-import _ from 'lodash'
-import dayjs from 'dayjs'
-import { MockMethod } from 'vite-plugin-mock'
+const sendJson = require('send-data/json')
+const _ = require('lodash')
+const dayjs = require('dayjs')
 
-function getMinDate() {
-  return {
+function getMinDate(req, res) {
+  sendJson(req, res, {
     min_date: 20230101,
-  }
+  })
 }
 
-function getCategoryChart() {
+function getCategoryChart(req, res) {
   const groups = [
     {
       id: 1,
@@ -31,10 +31,10 @@ function getCategoryChart() {
       ],
     },
   ]
-  return { groups }
+  sendJson(req, res, { groups })
 }
 
-function getInvestmentChart() {
+function getInvestmentChart(req, res) {
   const accounts = [
     { id: 1, name: 'Alipay', amount: '2000', percent: 0.9524 },
     { id: 2, name: 'CMB', amount: '100', percent: 0.0476 },
@@ -42,23 +42,19 @@ function getInvestmentChart() {
   ]
   const total = _(accounts).map('amount').map(_.toNumber).sum() + ''
 
-  return {
+  sendJson(req, res, {
     record_type: 2,
     category_id: 6,
     total,
     accounts,
-  }
+  })
 }
 
-function getNetCapitalChart() {
+function getNetCapitalChart(req, res) {
   let current = dayjs().startOf('month').subtract(11, 'month')
   const end = dayjs().endOf('month')
 
-  const data = [] as {
-    month: string
-    amount: string
-  }[]
-
+  const data = []
   while (current.isBefore(end)) {
     data.push({
       month: current.format('YYYYMM'),
@@ -67,14 +63,11 @@ function getNetCapitalChart() {
     current = current.add(1, 'month')
   }
 
-  return { data }
+  sendJson(req, res, { data })
 }
 
-function makeCategoryTrendChart(categories: { id: number }[], allowNegative = false) {
-  const data = [] as {
-    month: string
-    [key: string]: string
-  }[]
+function makeCategoryTrendChart(categories, allowNegative = false) {
+  const data = []
 
   let current = dayjs().startOf('month').subtract(11, 'month')
   const end = dayjs().endOf('month')
@@ -96,62 +89,41 @@ function makeCategoryTrendChart(categories: { id: number }[], allowNegative = fa
   return data
 }
 
-function getExpenseChart() {
+function getExpenseChart(req, res) {
   const categories = [
     { id: 1, name: 'Food' },
     { id: 2, name: 'Drink' },
     { id: 3, name: 'Clothes' },
   ]
   const data = makeCategoryTrendChart(categories)
-  return { categories, data }
+  sendJson(req, res, { categories, data })
 }
 
-function getIncomeChart() {
+function getIncomeChart(req, res) {
   const categories = [
     { id: 4, name: 'Salary' },
     { id: 5, name: 'Investment' },
   ]
   const data = makeCategoryTrendChart(categories, true)
-  return { categories, data }
+  sendJson(req, res, { categories, data })
 }
 
-function getInvestmentTrend() {
+function getInvestmentTrend(req, res) {
   const categories = [
     { id: 7, name: 'Alipay' },
     { id: 8, name: 'Snowball' },
     { id: 9, name: 'Stock' },
   ]
   const data = makeCategoryTrendChart(categories, true)
-  return { categories, data }
+  sendJson(req, res, { categories, data })
 }
 
-export default [
-  {
-    url: '/api/chart/min-date',
-    response: getMinDate,
-  },
-  {
-    url: '/api/chart/category',
-    response: getCategoryChart,
-  },
-  {
-    url: '/api/chart/investment',
-    response: getInvestmentChart,
-  },
-  {
-    url: '/api/chart/net-capital',
-    response: getNetCapitalChart,
-  },
-  {
-    url: '/api/chart/expense',
-    response: getExpenseChart,
-  },
-  {
-    url: '/api/chart/income',
-    response: getIncomeChart,
-  },
-  {
-    url: '/api/chart/investment-trend',
-    response: getInvestmentTrend,
-  },
-] as MockMethod[]
+module.exports = {
+  'GET /api/chart/min-date': getMinDate,
+  'GET /api/chart/category': getCategoryChart,
+  'GET /api/chart/investment': getInvestmentChart,
+  'GET /api/chart/net-capital': getNetCapitalChart,
+  'GET /api/chart/expense': getExpenseChart,
+  'GET /api/chart/income': getIncomeChart,
+  'GET /api/chart/investment-trend': getInvestmentTrend,
+}
