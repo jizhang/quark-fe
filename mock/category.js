@@ -1,7 +1,7 @@
-import { MockMethod } from 'vite-plugin-mock'
+const sendJson = require('send-data/json')
 
-function getCategoryList() {
-  return {
+function getCategoryList(req, res) {
+  sendJson(req, res, {
     data: [
       { id: 1, name: 'Meal', type: 1 },
       { id: 2, name: 'Snack', type: 1 },
@@ -9,12 +9,9 @@ function getCategoryList() {
       { id: 4, name: 'Salary', type: 2 },
       { id: 5, name: 'Investment', type: 2 },
     ],
-  }
+  })
 }
 
-export default [
-  {
-    url: '/api/category/list',
-    response: getCategoryList,
-  },
-] as MockMethod[]
+module.exports = {
+  'GET /api/category/list': getCategoryList,
+}
