@@ -37,7 +37,9 @@ const router = createBrowserRouter([
     path: '/chart/index',
     element: <ChartIndex />,
   },
-])
+], {
+  basename: import.meta.env.BASE_URL,
+})
 
 navigateHolder.navigate = router.navigate
 

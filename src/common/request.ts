@@ -12,7 +12,7 @@ export async function request(url: string, config?: RequestInit) {
 
   // fetch error
   try {
-    response = await fetch(url, config)
+    response = await fetch(import.meta.env.BASE_URL + url, config)
   } catch (error) {
     enqueueSnackbar(String(error), { variant: 'error' })
     throw new RequestError(0, {
@@ -39,7 +39,7 @@ export async function request(url: string, config?: RequestInit) {
 
   // 401 Unauthorized
   if (response.status === 401) {
-    navigateHolder.navigate?.('/login')
+    navigateHolder.navigate?.(import.meta.env.BASE_URL + '/login')
     throw new RequestError(401, null)
   }
 
