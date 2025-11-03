@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { useNavigate, useLocation, useHref } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Box,
   Avatar,
@@ -133,7 +133,7 @@ export default () => {
   }
 
   const navigate = useNavigate()
-  const href = useHref(useLocation())
+  const currentLocation = useLocation()
 
   function handleAddRecord() {
     if (filterForm.account_id) {
@@ -150,7 +150,7 @@ export default () => {
   function gotoEditRecord(params: object) {
     const searchParams = {
       ...params,
-      from_url: href,
+      from_url: `${currentLocation.pathname}${currentLocation.search}`,
     }
     navigate({
       pathname: '/record/edit',

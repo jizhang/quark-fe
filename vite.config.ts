@@ -7,9 +7,10 @@ import { visualizer } from 'rollup-plugin-visualizer'
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   const mockEnabled = command === 'serve' && process.env.MOCK !== 'none'
+  const baseUrl = '/quark'
 
   const config: UserConfig = {
-    base: '/quark',
+    base: baseUrl,
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -32,7 +33,7 @@ export default defineConfig(({ command }) => {
   }
 
   if (mockEnabled) {
-    config.plugins.push(mockPlugin())
+    config.plugins.push(mockPlugin(baseUrl))
   } else {
     config.server = {
       proxy: {

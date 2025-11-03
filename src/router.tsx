@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import { navigateHolder } from '@/common/utils'
 import Login from './routes/Login'
 import AccountList from './routes/account/List'
@@ -8,7 +8,7 @@ import RecordEdit from './routes/record/Edit'
 import UserSetting from './routes/UserSetting'
 import ChartIndex from './routes/chart/Index'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/login',
     element: <Login />,
@@ -37,9 +37,7 @@ const router = createBrowserRouter([
     path: '/chart/index',
     element: <ChartIndex />,
   },
-], {
-  basename: import.meta.env.BASE_URL,
-})
+])
 
 navigateHolder.navigate = router.navigate
 

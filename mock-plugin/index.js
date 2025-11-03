@@ -6,20 +6,22 @@ const Router = require('routes')
 const bodyParser = require('body-parser')
 
 class MockMiddleware {
-  constructor(mockPath) {
+  constructor(mockPath, baseUrl) {
     this.mockPath = mockPath
     console.log(`Load mocks from ${mockPath}`)
-    this.createRouter()
+    this.createRouter(baseUrl)
     this.setupWatcher()
   }
 
-  createRouter() {
+  createRouter(baseUrl) {
     const router = new Router()
 
     glob.sync(`${this.mockPath}/**/*.js`).forEach((file) => {
       const routes = require(path.resolve(file))
-      Object.keys(routes).forEach((path) => {
-        router.addRoute(path, routes[path])
+      Object.keys(routes).forEach(mockPath => {
+        const arr = mockPath.split(/\s+/)
+        const fixedPath = `${arr[0]} ${baseUrl}${arr[1]}`
+        router.addRoute(fixedPath, routes[mockPath])
       })
     })
 
@@ -55,12 +57,12 @@ class MockMiddleware {
   }
 }
 
-const mockPlugin = () => ({
+const mockPlugin = (baseUrl) => ({
   name: 'mock-plugin',
   configureServer(server) {
     server.middlewares.use(bodyParser.json())
 
-    const { middleware } = new MockMiddleware('./mock')
+    const { middleware } = new MockMiddleware('./mock', baseUrl)
     server.middlewares.use(middleware)
   },
 })
